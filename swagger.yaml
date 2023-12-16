@@ -9,6 +9,12 @@ tags:
     description: Регистрация и авторизация пользователей
   - name: places
     description: Достопримечательности
+  - name: routes
+    description: Маршруты
+  - name: users
+    description: Пользователи
+  - name: achievements
+    description: Достижения
 paths:
   /auth/login:
     post:
@@ -28,7 +34,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/AuthSuccess'
         '401':
           description: Неправильный пароль или почта
         '400':
@@ -43,7 +49,7 @@ paths:
       tags:
         - auth
       summary: Регистрация
-      description: Регистрация по логину и паролю.
+      description: Регистрация по логину и паролю
       requestBody:
         content:
           application/json:
@@ -73,7 +79,7 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/Places'
+               $ref: '#/components/schemas/GetPlaces'
         '401':
           description: Невалидный токен
           
@@ -96,7 +102,7 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/Place'
+               $ref: '#/components/schemas/GetPlace'
         '401':
           description: Невалидный токен
         '404':
@@ -125,13 +131,12 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/Comments'
+               $ref: '#/components/schemas/GetComments'
         '401':
           description: Невалидный токен
         '404':
           description: Невалидный id
-  /places/{id}/rate:
-    get:
+    post:
       parameters:
         - name: id
           in: path
@@ -140,7 +145,55 @@ paths:
             type: number
       tags:
         - places
-      summary: Оценка 
+      summary: Создание комментария к достопримечательности
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostComment'
+      responses:
+        '201':
+          description: Успешное создание комментария
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetComment'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+  /places/{id}/rate:
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - places
+      summary: Рейтинг достопримечательности 
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceRate'
+      responses:
+        '201':
+          description: Рейтинг был успешно добавлен
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+  /routes:
+    get:
+      tags:
+        - routes
+      summary: Получение маршрутов 
       security:
         - bearerAuth: []
       responses:
@@ -149,13 +202,25 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/Comments'
+               $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
-                
-  
+    post:
+      tags:
+        - routes
+      summary: Создание маршрута 
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRoute'
+      responses:
+        '201':
+          description: Успешное создание маршрута
+        '401':
+          description: Невалидный токен
 
 components:
   securitySchemes:
@@ -185,7 +250,7 @@ components:
             password:
               type: string
               example: "Поле password должно быть строкой"
-    User:
+    AuthSuccess:
       type: object
       properties:
         data:
@@ -194,120 +259,204 @@ components:
             access_token: 
               type: string
               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-    Places:
+    ShortPlace:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 12
+        title:
+          type: string
+          example: "Парк Ангелов"
+        lat:
+          type: number
+          example: 12345.65
+        lon:
+          type: number
+          example: 98983.34
+        rate:
+          type: number
+          example: 4.5
+        image:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 34
+            path:
+              type: string
+              example: "images/LKJkljg33POJB123oij.jpeg"
+        locality:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 60
+            title:
+              type: string
+              example: "Кемерово"
+    FullPlace:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 12
+        title:
+          type: string
+          example: "Парк Ангелов"
+        lat:
+          type: number
+          example: 12345.65
+        lon:
+          type: number
+          example: 98983.34
+        rate:
+          type: number
+          example: 4.5
+        description:
+          type: string
+          example: "Одно из прекраснейших мест города Кемерово..."
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 34
+              path:
+                type: string
+                example: "images/LKJkljg33POJB123oij.jpeg"
+        locality:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 60
+            title:
+              type: string
+              example: "Кемерово"
+  
+    GetPlaces:
       type: object
       properties:
         data:
           type: array
           items:
-            type: object
-            properties:
-              id: 
-                type: integer
-                example: 12
-              title:
-                type: string
-                example: "Парк Ангелов"
-              lat:
-                type: number
-                example: 12345.65
-              lon:
-                type: number
-                example: 98983.34
-              rate:
-                type: number
-                example: 4.5
-              image:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 34
-                  path:
-                    type: string
-                    example: "images/LKJkljg33POJB123oij.jpeg"
-              locality:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 60
-                  title:
-                    type: string
-                    example: "Кемерово"
-    Place:
+            oneOf:
+              - $ref: '#/components/schemas/ShortPlace'
+    GetPlace:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FullPlace'
+  
+    UserShort:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 24
+        username:
+          type: string
+          example: "Юрий Константинопольский"
+        avatar:
+          type: string
+          example: "images/default.jpeg"
+      
+    Comment:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 55
+        comment:
+          type: string
+          example: "Крутое место"
+        created_at:
+          type: string
+          example: "2023-10-01 11:16:54"
+        author:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/UserShort'
+    
+    PostComment:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: "Одно из прекраснейших мест города Кемерово..."
+            
+    GetComments:
       type: object
       properties:
         data:
           type: array
           items:
-            type: object
-            properties:
-              id: 
-                type: integer
-                example: 12
-              title:
-                type: string
-                example: "Парк Ангелов"
-              lat:
-                type: number
-                example: 12345.65
-              lon:
-                type: number
-                example: 98983.34
-              rate:
-                type: number
-                example: 4.5
-              description:
-                type: string
-                example: "Одно из прекраснейших мест города Кемерово..."
-              images:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 34
-                    path:
-                      type: string
-                      example: "images/LKJkljg33POJB123oij.jpeg"
-              locality:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 60
-                  title:
-                    type: string
-                    example: "Кемерово"
-    Comments:
+            oneOf: 
+              - $ref: '#/components/schemas/Comment' 
+              
+    GetComment:
       type: object
       properties:
         data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Comment'
+
+    PlaceRate:
+      type: object
+      properties:
+        rate:
+          type: number
+          example: 4.5
+  
+    Route:
+      type: object
+      properties:
+        id: 
+          type: number
+          example: 5
+        title:
+          type: string
+          example: "Супер маршрут по лесу"
+        route_points:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ShortPlace'
+        creator: 
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/UserShort'
+  
+    GetRoutes:
+      type: object
+      properties:
+        data: 
+          type: array
+          items:
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/Route'
+    PostRoute:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Супер маршрут по лесу"
+        route_points:
           type: array
           items:
             type: object
             properties:
-              id: 
-                type: integer
-                example: 55
-              comment:
-                type: string
-                example: "Крутое место"
-              created_at:
-                type: string
-                example: "2023-10-01 11:16:54"
-              author:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 24
-                  username:
-                    type: string
-                    example: "Юрий Константинопольский"
-                  avatar:
-                    type: string
-                    example: "image/default.jpeg"
+              index:
+                type: number
+                example: 2
+              place_id:
+                type: number
+                example: 2
     
