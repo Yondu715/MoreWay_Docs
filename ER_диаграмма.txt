@@ -9,6 +9,7 @@ Table friends {
 
 Table users {
   id integer [primary key]
+  avatar string
   email email
   password varchar
   username varchar
@@ -26,7 +27,6 @@ Table places {
   description varchar
   lat float
   lon float
-  rate float
   locality_id integer
 }
 
@@ -104,6 +104,16 @@ Table user_route_progress {
   route_point_id integer [pk]
   is_completed boolean
 }
+
+Table user_rate_places {
+  user_id integer [pk]
+  place_id integer [pk]
+  rate float
+}
+
+Ref: users.id < user_rate_places.user_id
+
+Ref: places.id < user_rate_places.place_id
 
 Ref: route_points.id < user_route_progress.route_point_id
 
