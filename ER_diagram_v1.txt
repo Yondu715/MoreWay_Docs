@@ -111,6 +111,27 @@ Table user_rate_places {
   rate float
 }
 
+Table route_comments {
+  id integer [primary key]
+  comment varchar
+  author_id integer
+  route_id integer
+}
+
+Table user_rate_routes {
+  user_id integer [pk]
+  route_id integer [pk]
+  rate float
+}
+
+Ref: routes.id < user_rate_routes.route_id
+
+Ref: users.id < user_rate_routes.user_id
+
+Ref: routes.id < route_comments.route_id
+
+Ref: users.id < route_comments.author_id
+
 Ref: users.id < user_rate_places.user_id
 
 Ref: places.id < user_rate_places.place_id
