@@ -51,7 +51,6 @@ Table place_images {
 Table routes {
   id integer [primary key]
   title varchar
-  rate float
   creator_id integer
 }
 
