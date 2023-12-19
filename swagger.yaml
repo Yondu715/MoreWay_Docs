@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Trails42
+  title: MoreWay
   version: 1.0.0
 servers:
   - url: https://localhost:80/api/v1
@@ -72,7 +72,7 @@ paths:
     get:
       tags:
         - places
-      summary: Получение всех достопримечательностей
+      summary: Получение списка всех достопримечательностей, доступных в системе
       security:
         - bearerAuth: [] 
       responses:
@@ -95,7 +95,7 @@ paths:
             type: number
       tags:
         - places
-      summary: Получение достопримечательности
+      summary: Получение подробной информации о достопримечательности по ее идентификатору
       security:
         - bearerAuth: []
       responses:
@@ -124,7 +124,7 @@ paths:
             type: number
       tags:
         - places
-      summary: Получение комментариев к достопримечательности
+      summary: Получение списка комментариев к достопримечательности
       security:
         - bearerAuth: []
       responses:
@@ -147,7 +147,7 @@ paths:
             type: number
       tags:
         - places
-      summary: Создание комментария к достопримечательности
+      summary: Добавление комментария к достопримечательности
       security:
         - bearerAuth: []
       requestBody:
@@ -157,7 +157,7 @@ paths:
               $ref: '#/components/schemas/PostComment'
       responses:
         '201':
-          description: Успешное создание комментария
+          description: Успешное добавление комментария
           content: 
             application/json:
               schema: 
@@ -176,7 +176,7 @@ paths:
             type: number
       tags:
         - places
-      summary: Поставить оценку достопримечательности 
+      summary: Добавление оценки достопримечательности 
       security:
         - bearerAuth: []
       requestBody:
@@ -195,7 +195,7 @@ paths:
     get:
       tags:
         - routes
-      summary: Получение маршрутов 
+      summary: Получение списка всех маршрутов, доступных в системе 
       security:
         - bearerAuth: []
       responses:
@@ -225,6 +225,29 @@ paths:
           description: Невалидный токен
   
   /routes/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Получение полной информации о маршруте по его идентификатору
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetRoute'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
     patch:
       parameters:
         - name: id
@@ -234,7 +257,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Обновление маршрута
+      summary: Обновление данных маршрута
       security:
         - bearerAuth: []
       requestBody:
@@ -265,7 +288,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Получение комментариев к маршруту
+      summary: Получение списка комментариев к маршруту
       security:
         - bearerAuth: []
       responses:
@@ -288,7 +311,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Создание комментария к маршруту
+      summary: Добавление комментария к маршруту
       security:
         - bearerAuth: []
       requestBody:
@@ -298,7 +321,7 @@ paths:
               $ref: '#/components/schemas/PostComment'
       responses:
         '201':
-          description: Успешное создание комментария
+          description: Успешное добавление комментария
           content: 
             application/json:
               schema: 
@@ -318,7 +341,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Поставить оценку маршруту 
+      summary: Добавление оценки маршруту 
       security:
         - bearerAuth: []
       requestBody:
@@ -338,7 +361,7 @@ paths:
     get:
       tags:
         - routes
-      summary: Получение избранных маршрутов 
+      summary: Получение избранных маршрутов пользователя 
       security:
         - bearerAuth: []
       responses:
@@ -350,33 +373,42 @@ paths:
                $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
+          
+  /routes/{id}/favorite:
     post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
       tags:
        - routes
       summary: Добавление маршрута в "Избранное" 
       security:
        - bearerAuth: []
-      requestBody:
-       content:
-         application/json:
-           schema:
-             $ref: '#/components/schemas/PostRouteFavorite'
       responses:
        '200':
          description: Успешное добавление маршрута в "Избранное"
        '401':
          description: Невалидный токен
   
-  /achievements: # ????????????????????????????
+  /users/{id}:
     get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
       tags:
-       - achievements
-      summary: Получение достижений 
+        - users
+      summary: Получение полной информации о пользователе по его идентификатору 
       security:
        - bearerAuth: []
       responses:
        '200':
-         description: Успешное получение данных 
+         description: Успешное получение данных
        '401':
          description: Невалидный токен
 
@@ -510,6 +542,16 @@ components:
             title:
               type: string
               example: "Кемерово"
+    
+    VeryShortPlace:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        image:
+          type: string
+          example: "images/aboba.production.jpeg"
   
     GetPlaces:
       type: object
@@ -597,7 +639,27 @@ components:
           type: number
           example: 4.5
   
-    Route:
+    
+    ShortRoute:
+      type: object
+      properties:
+        id: 
+          type: number
+          example: 5
+        title:
+          type: string
+          example: "Супер маршрут по лесу"
+        route_points:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/VeryShortPlace'
+        creator: 
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/UserShort'
+            
+    FullRoute:
       type: object
       properties:
         id: 
@@ -631,11 +693,19 @@ components:
           items:
             type: object
             oneOf:
-              - $ref: '#/components/schemas/Route'
+              - $ref: '#/components/schemas/ShortRoute'
         meta:
           type: object
           oneOf:
             - $ref: '#/components/schemas/PaginationMeta'
+    
+    GetRoute:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FullRoute'
             
     PostRoute:
       type: object
@@ -654,10 +724,3 @@ components:
               place_id:
                 type: number
                 example: 2
-    PostRouteFavorite:
-      type: object
-      properties:
-        route_id:
-          type: number
-          example: 1
-    
