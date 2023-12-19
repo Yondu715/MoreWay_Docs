@@ -6,7 +6,7 @@ servers:
   - url: https://localhost:80/api/v1
 tags:
   - name: auth
-    description: Регистрация и авторизация пользователей
+    description: Регистрация и авторизация
   - name: places
     description: Достопримечательности
   - name: routes
@@ -15,6 +15,8 @@ tags:
     description: Пользователи
   - name: achievements
     description: Достижения
+  - name: route-points
+    description: Точки маршрута
 paths:
   /auth/login:
     post:
@@ -174,14 +176,14 @@ paths:
             type: number
       tags:
         - places
-      summary: Рейтинг достопримечательности 
+      summary: Поставить оценку достопримечательности 
       security:
         - bearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PlaceRate'
+              $ref: '#/components/schemas/PostRate'
       responses:
         '201':
           description: Рейтинг был успешно добавлен
@@ -221,6 +223,162 @@ paths:
           description: Успешное создание маршрута
         '401':
           description: Невалидный токен
+  
+  /routes/{id}:
+    patch:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Обновление маршрута
+      security:
+        - bearerAuth: []
+      requestBody:
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/PatchRoute'
+      responses:
+        '200':
+          description: Успешное обновление маршрута
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+  
+  /routes/{id}/comments:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: pageIndex
+          in: query
+          required: false
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Получение комментариев к маршруту
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetComments'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Создание комментария к маршруту
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostComment'
+      responses:
+        '201':
+          description: Успешное создание комментария
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetComment'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+  
+  /routes/{id}/rate:
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Поставить оценку маршруту 
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRate'
+      responses:
+        '201':
+          description: Рейтинг был успешно добавлен
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+          
+  /routes/favorite:
+    get:
+      tags:
+        - routes
+      summary: Получение избранных маршрутов 
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetRoutes'
+        '401':
+          description: Невалидный токен
+    post:
+      tags:
+       - routes
+      summary: Добавление маршрута в "Избранное" 
+      security:
+       - bearerAuth: []
+      requestBody:
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/PostRouteFavorite'
+      responses:
+       '200':
+         description: Успешное добавление маршрута в "Избранное"
+       '401':
+         description: Невалидный токен
+  
+  /achievements: # ????????????????????????????
+    get:
+      tags:
+       - achievements
+      summary: Получение достижений 
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных 
+       '401':
+         description: Невалидный токен
 
 components:
   securitySchemes:
@@ -229,6 +387,20 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    PaginationMeta:
+      type: object
+      properties:
+        prev_page:
+          type: string
+          example: "http://localhost:80/endpoint?page=1"
+        current_page:
+          type: string
+          example: "http://localhost:80/endpoint?page=2"
+        next_page:
+          type: string
+          example: "http://localhost:80/endpoint?page=3"
+        
+  
     AuthInfo:
       type: object
       properties:
@@ -238,6 +410,7 @@ components:
         password:
           type: string
           example: "*******************"
+          
     AuthError:
       type: object
       properties:
@@ -259,6 +432,7 @@ components:
             access_token: 
               type: string
               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+              
     ShortPlace:
       type: object
       properties:
@@ -345,6 +519,11 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/ShortPlace'
+        meta:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/PaginationMeta'
+            
     GetPlace:
       type: object
       properties:
@@ -398,6 +577,10 @@ components:
           items:
             oneOf: 
               - $ref: '#/components/schemas/Comment' 
+        meta:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/PaginationMeta'
               
     GetComment:
       type: object
@@ -407,7 +590,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/Comment'
 
-    PlaceRate:
+    PostRate:
       type: object
       properties:
         rate:
@@ -432,6 +615,13 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/UserShort'
+    
+    PatchRoute:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Другой супер маршрут по лесу"
   
     GetRoutes:
       type: object
@@ -442,6 +632,11 @@ components:
             type: object
             oneOf:
               - $ref: '#/components/schemas/Route'
+        meta:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/PaginationMeta'
+            
     PostRoute:
       type: object
       properties:
@@ -459,4 +654,10 @@ components:
               place_id:
                 type: number
                 example: 2
+    PostRouteFavorite:
+      type: object
+      properties:
+        route_id:
+          type: number
+          example: 1
     
