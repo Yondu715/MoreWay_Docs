@@ -15,8 +15,8 @@ tags:
     description: Пользователи
   - name: achievements
     description: Достижения
-  - name: route-points
-    description: Точки маршрута
+  - name: chats
+    description: Чаты
 paths:
   /auth/login:
     post:
@@ -85,10 +85,10 @@ paths:
         '401':
           description: Невалидный токен
           
-  /places/{id}:
+  /places/{placeId}:
     get:
       parameters:
-        - name: id
+        - name: placeId
           in: path
           required: true
           schema:
@@ -109,10 +109,30 @@ paths:
           description: Невалидный токен
         '404':
           description: Невалидный id
-  /places/{id}/comments:
+    delete:
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - places
+      summary: Удаление достопримечательности из системы
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление данных
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+          
+  /places/{placeId}/comments:
     get:
       parameters:
-        - name: id
+        - name: placeId
           in: path
           required: true
           schema:
@@ -140,7 +160,7 @@ paths:
           description: Невалидный id
     post:
       parameters:
-        - name: id
+        - name: placeId
           in: path
           required: true
           schema:
@@ -166,10 +186,11 @@ paths:
           description: Невалидный токен
         '404':
           description: Невалидный id
-  /places/{id}/rate:
+          
+  /places/{placeId}/rating:
     post:
       parameters:
-        - name: id
+        - name: placeId
           in: path
           required: true
           schema:
@@ -183,7 +204,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostRate'
+              $ref: '#/components/schemas/PostRating'
       responses:
         '201':
           description: Рейтинг был успешно добавлен
@@ -224,10 +245,10 @@ paths:
         '401':
           description: Невалидный токен
   
-  /routes/{id}:
+  /routes/{routeId}:
     get:
       parameters:
-        - name: id
+        - name: routeId
           in: path
           required: true
           schema:
@@ -250,7 +271,7 @@ paths:
           description: Невалидный id
     patch:
       parameters:
-        - name: id
+        - name: routeId
           in: path
           required: true
           schema:
@@ -272,11 +293,54 @@ paths:
           description: Невалидный токен
         '404':
           description: Невалидный id
+    delete:
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Удаление маршрута из системы
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление маршрута
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+    put:
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Изменение маршрута
+      security:
+        - bearerAuth: []
+      requestBody:
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/PutRoute'
+      responses:
+        '201':
+          description: Успешное изменение маршрута
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
   
-  /routes/{id}/comments:
+  /routes/{routeId}/comments:
     get:
       parameters:
-        - name: id
+        - name: routeId
           in: path
           required: true
           schema:
@@ -304,7 +368,7 @@ paths:
           description: Невалидный id
     post:
       parameters:
-        - name: id
+        - name: routeId
           in: path
           required: true
           schema:
@@ -331,10 +395,10 @@ paths:
         '404':
           description: Невалидный id
   
-  /routes/{id}/rate:
+  /routes/{routeId}/rating:
     post:
       parameters:
-        - name: id
+        - name: routeId
           in: path
           required: true
           schema:
@@ -348,7 +412,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostRate'
+              $ref: '#/components/schemas/PostRating'
       responses:
         '201':
           description: Рейтинг был успешно добавлен
@@ -356,47 +420,11 @@ paths:
           description: Невалидный токен
         '404':
           description: Невалидный id
-          
-  /routes/favorite:
-    get:
-      tags:
-        - routes
-      summary: Получение избранных маршрутов пользователя 
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Успешное получение данных
-          content: 
-            application/json:
-              schema: 
-               $ref: '#/components/schemas/GetRoutes'
-        '401':
-          description: Невалидный токен
-          
-  /routes/{id}/favorite:
-    post:
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-       - routes
-      summary: Добавление маршрута в "Избранное" 
-      security:
-       - bearerAuth: []
-      responses:
-       '200':
-         description: Успешное добавление маршрута в "Избранное"
-       '401':
-         description: Невалидный токен
   
-  /users/{id}:
+  /users/{userId}:
     get:
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           schema:
@@ -409,8 +437,397 @@ paths:
       responses:
        '200':
          description: Успешное получение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetUser'
        '401':
          description: Невалидный токен
+    patch:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Изменение данных пользователя 
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUser'
+      responses:
+       '200':
+         description: Успешное изменение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetUser'
+       '401':
+         description: Невалидный токен
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Удаление аккаунта пользователя 
+      security:
+       - bearerAuth: []
+      responses:
+       '204':
+         description: Успешное удаление аккаунта
+       '401':
+         description: Невалидный токен
+      
+  
+  /users/{userId}/avatar:
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Обновление аватара пользователя
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetUserAvatar'
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/password:
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Изменение пароля пользователя
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUserPassword'
+      responses:
+        '204':
+          description: Успешное изменение пароля
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+  
+         
+  /users/{userId}/routes:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение списка маршрутов, созданных пользователем 
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetRoutes'
+       '401':
+         description: Невалидный токен
+         
+  /users/{userId}/routes/favorite:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение избранных маршрутов пользователя 
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetRoutes'
+        '401':
+          description: Невалидный токен
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+       - users
+      summary: Добавление маршрута в "Избранное" 
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostFavoriteRoute'
+      responses:
+       '200':
+         description: Успешное добавление маршрута в "Избранное"
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/routes/favorite/{routeId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Удаление маршрута из категории "Избранное" 
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление маршрута
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Невалидный id
+         
+  /users/{userId}/friends:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение списка друзей пользователя 
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetFriends'
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/friends/{friendId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: friendId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Удаление пользователя из списка друзей 
+      security:
+       - bearerAuth: []
+      responses:
+       '204':
+         description: Успешное удаление данных
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/friends/request:
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Создание запроса на добавление в друзья
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostFriendsRequest'
+      responses:
+       '201':
+         description: Успешное создание запроса
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/friends/accepted:
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Принятие запроса на добавление в друзья
+      security:
+       - bearerAuth: []
+      responses:
+       '204':
+         description: Успешное принятие запроса
+       '401':
+         description: Невалидный токен
+  
+  /users/{userId}/achievements:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение списка достижений пользователя 
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных
+         content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetUserAchievements'
+       '401':
+         description: Невалидный токен
+  
+  /achievements:
+    get:
+      tags:
+        - achievements
+      summary: Получение списка достижений, доступных в системе
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         description: Успешное получение данных
+         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAchievements'
+       '401':
+         description: Невалидный токен
+    post:
+      tags:
+        - achievements
+      summary: Создание достижения
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostAchievement'
+      responses:
+       '201':
+         description: Успешное создание достижения
+         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAchievement'
+       '401':
+         description: Невалидный токен
+  
+  /achievements/{achievementId}:
+    patch:
+      parameters:
+        - name: achievementId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - achievements
+      summary: Изменение данных достижения
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchAchievement'
+      responses:
+       '201':
+         description: Успешное изменение достижения
+         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAchievement'
+       '401':
+         description: Невалидный токен
+    delete:
+      parameters:
+        - name: achievementId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - achievements
+      summary: Изменение достижения по идентификатору
+      security:
+       - bearerAuth: []
+      responses:
+       '204':
+         description: Успешное удаление достижения
+       '401':
+         description: Невалидный токен
+      
+      
 
 components:
   securitySchemes:
@@ -480,7 +897,7 @@ components:
         lon:
           type: number
           example: 98983.34
-        rate:
+        rating:
           type: number
           example: 4.5
         image:
@@ -516,7 +933,7 @@ components:
         lon:
           type: number
           example: 98983.34
-        rate:
+        rating:
           type: number
           example: 4.5
         description:
@@ -632,10 +1049,10 @@ components:
           oneOf:
             - $ref: '#/components/schemas/Comment'
 
-    PostRate:
+    PostRating:
       type: object
       properties:
-        rate:
+        rating:
           type: number
           example: 4.5
   
@@ -671,8 +1088,18 @@ components:
         route_points:
           type: array
           items:
-            oneOf:
-              - $ref: '#/components/schemas/ShortPlace'
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              index:
+                type: number
+                example: 1
+              place:
+                type: object
+                oneOf:
+                  - $ref: '#/components/schemas/ShortPlace'
         creator: 
           type: object
           oneOf:
@@ -724,3 +1151,159 @@ components:
               place_id:
                 type: number
                 example: 2
+    
+    PostFavoriteRoute:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+    
+    PutRoute:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/PostRoute'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        username:
+          type: number
+          example: "Aboba"
+        avatar:
+          type: string
+          example: "images/avatar.jpg"
+    
+    UserAvatar:
+      type: object
+      properties:
+        path:
+          type: string
+          example: 'images/avatar1.jpeg'
+    
+    GetUserAvatar:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/UserAvatar'
+            
+    PostUserPassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: 'old_password'
+        new_password:
+          type: string
+          example: 'new_password'
+    
+    GetUser:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/User'
+    
+    PatchUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'vovan1337'
+    
+    GetFriends:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/User'
+    
+    PostFriendsRequest:
+      type: object
+      properties:
+        friend_id:
+          type: number
+          example: 1
+    
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 5
+        title:
+          type: string
+          example: 'Исследователь'
+        description:
+          type: string
+          example: 'Необходимо пройти 1 маршрут'
+        target:
+          type: number
+          example: 1
+    
+    GetAchievement:
+      type: object
+      properties:
+        data: 
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Achievement'
+    
+    GetUserAchievements:
+      type: object
+      properties:
+        data: 
+          type: array
+          items:
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/Achievement'
+            properties:
+              current_progress:
+                type: number
+                example: 0
+    
+    PostAchievement:
+      type: object
+      properties:
+        title:
+          type: string
+          example: 'Исследователь'
+        description:
+          type: string
+          example: 'Необходимо пройти 1 маршрут'
+        target:
+          type: number
+          example: 1
+    
+    PatchAchievement:
+      type: object
+      properties:
+        title:
+          type: string
+          example: 'Исследователь'
+        description:
+          type: string
+          example: 'Необходимо пройти 1 маршрут'
+        target:
+          type: number
+          example: 1
+    
+    GetAchievements:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Achievement'
+            
+          
