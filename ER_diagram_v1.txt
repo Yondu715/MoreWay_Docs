@@ -73,7 +73,7 @@ Table chats {
   creator_id integer
 }
 
-Table messages {
+Table chat_messages {
   id integer [primary key]
   message varchar
   sender_id integer
@@ -123,6 +123,15 @@ Table user_rate_routes {
   rate float
 }
 
+Table user_active_routes {
+  user_id integer [pk]
+  route_id integer [pk]
+}
+
+Ref: routes.id - user_active_routes.route_id
+
+Ref: users.id - user_active_routes.user_id
+
 Ref: routes.id < user_rate_routes.route_id
 
 Ref: users.id < user_rate_routes.user_id
@@ -149,9 +158,9 @@ Ref: chats.id < chats_users.chat_id
 
 Ref: routes.id < chats.route_id
 
-Ref: messages.chat_id > chats.id
+Ref: chat_messages.chat_id > chats.id
 
-Ref: messages.sender_id > users.id
+Ref: chat_messages.sender_id > users.id
 
 Ref: chats.creator_id > users.id
 
