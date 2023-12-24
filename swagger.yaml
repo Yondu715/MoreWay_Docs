@@ -25,6 +25,7 @@ paths:
       summary: Авторизация
       description: Авторизация по логину и паролю.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -53,6 +54,7 @@ paths:
       summary: Регистрация
       description: Регистрация по логину и паролю
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -107,8 +109,9 @@ paths:
                $ref: '#/components/schemas/GetPlace'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+
     delete:
       parameters:
         - name: placeId
@@ -119,6 +122,7 @@ paths:
       tags:
         - places
       summary: Удаление достопримечательности из системы
+      description: Это действие доступно только модератору
       security:
         - bearerAuth: []
       responses:
@@ -126,8 +130,10 @@ paths:
           description: Успешное удаление данных
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
           
   /places/{placeId}/comments:
     get:
@@ -156,8 +162,9 @@ paths:
                $ref: '#/components/schemas/GetComments'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+
     post:
       parameters:
         - name: placeId
@@ -171,6 +178,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -184,8 +192,8 @@ paths:
                $ref: '#/components/schemas/GetComment'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
           
   /places/{placeId}/rating:
     post:
@@ -201,6 +209,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -210,8 +219,8 @@ paths:
           description: Рейтинг был успешно добавлен
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
   /routes:
     get:
       tags:
@@ -235,6 +244,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -267,8 +277,8 @@ paths:
                $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
     patch:
       parameters:
         - name: routeId
@@ -279,10 +289,12 @@ paths:
       tags:
         - routes
       summary: Обновление данных маршрута
+      description: Это действие доступно только автору маршрута
       security:
         - bearerAuth: []
       requestBody:
-       content:
+        required: true
+        content:
          application/json:
            schema:
              $ref: '#/components/schemas/PatchRoute'
@@ -291,8 +303,10 @@ paths:
           description: Успешное обновление маршрута
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
     delete:
       parameters:
         - name: routeId
@@ -303,6 +317,7 @@ paths:
       tags:
         - routes
       summary: Удаление маршрута из системы
+      description: Это действие доступно только автору маршрута и модератору
       security:
         - bearerAuth: []
       responses:
@@ -310,8 +325,10 @@ paths:
           description: Успешное удаление маршрута
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
     put:
       parameters:
         - name: routeId
@@ -322,10 +339,12 @@ paths:
       tags:
         - routes
       summary: Изменение маршрута
+      description: Это действие доступно только автору маршрута
       security:
         - bearerAuth: []
       requestBody:
-       content:
+        required: true
+        content:
          application/json:
            schema:
              $ref: '#/components/schemas/PutRoute'
@@ -334,8 +353,32 @@ paths:
           description: Успешное изменение маршрута
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
+  
+  /routes/route-points/completed:
+    post:
+      tags:
+        - routes
+      summary: Пометить этап маршрута пройденным
+      description: Это действие доступно пользователям, которые проходят маршрут
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/PostRoutePointCompleted'
+      responses:
+        '200':
+          description: Успешное прохождение этапа 
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
   
   /routes/{routeId}/comments:
     get:
@@ -364,8 +407,8 @@ paths:
                $ref: '#/components/schemas/GetComments'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
     post:
       parameters:
         - name: routeId
@@ -379,6 +422,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -392,8 +436,8 @@ paths:
                $ref: '#/components/schemas/GetComment'
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
   
   /routes/{routeId}/rating:
     post:
@@ -409,6 +453,7 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -418,8 +463,8 @@ paths:
           description: Рейтинг был успешно добавлен
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
   
   /users/{userId}:
     get:
@@ -435,14 +480,16 @@ paths:
       security:
        - bearerAuth: []
       responses:
-       '200':
-         description: Успешное получение данных
-         content: 
+        '200':
+          description: Успешное получение данных
+          content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetUser'
-       '401':
-         description: Невалидный токен
+                $ref: '#/components/schemas/GetUser'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
     patch:
       parameters:
         - name: userId
@@ -453,22 +500,28 @@ paths:
       tags:
         - users
       summary: Изменение данных пользователя 
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchUser'
       responses:
-       '200':
-         description: Успешное изменение данных
-         content: 
+        '200':
+          description: Успешное изменение данных
+          content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetUser'
-       '401':
-         description: Невалидный токен
+                $ref: '#/components/schemas/GetUser'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
     delete:
       parameters:
         - name: userId
@@ -479,14 +532,18 @@ paths:
       tags:
         - users
       summary: Удаление аккаунта пользователя 
+      description: Это действие доступно только владельцу аккаунта и модератору
       security:
        - bearerAuth: []
       responses:
-       '204':
-         description: Успешное удаление аккаунта
-       '401':
-         description: Невалидный токен
-      
+        '204':
+          description: Успешное удаление аккаунта
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/avatar:
     post:
@@ -499,17 +556,22 @@ paths:
       tags:
         - users
       summary: Обновление аватара пользователя
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       responses:
-       '200':
-         description: Успешное получение данных
-         content: 
-            application/json:
-              schema: 
-               $ref: '#/components/schemas/GetUserAvatar'
-       '401':
-         description: Невалидный токен
+        '200':
+          description: Успешное получение данных
+          content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/GetUserAvatar'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/password:
     post:
@@ -522,9 +584,11 @@ paths:
       tags:
         - users
       summary: Изменение пароля пользователя
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -534,9 +598,10 @@ paths:
           description: Успешное изменение пароля
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
-  
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
          
   /users/{userId}/routes:
     get:
@@ -552,15 +617,71 @@ paths:
       security:
        - bearerAuth: []
       responses:
-       '200':
-         description: Успешное получение данных
-         content: 
+        '200':
+          description: Успешное получение данных
+          content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetRoutes'
-       '401':
-         description: Невалидный токен
-         
+                $ref: '#/components/schemas/GetRoutes'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+  
+  /users/{userId}/routes/active:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение активного маршрута пользователя 
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetRoute'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Изменение активного маршрута пользователя 
+      security:
+       - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostActiveRoute'
+      responses:
+        '200':
+          description: Успешное изменение активного маршрута
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetRoute'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+        
   /users/{userId}/routes/favorite:
     get:
       parameters:
@@ -583,6 +704,8 @@ paths:
                 $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
+        '400':
+          description: Невалидные данные
     post:
       parameters:
         - name: userId
@@ -593,18 +716,24 @@ paths:
       tags:
        - users
       summary: Добавление маршрута в "Избранное" 
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PostFavoriteRoute'
       responses:
-       '200':
-         description: Успешное добавление маршрута в "Избранное"
-       '401':
-         description: Невалидный токен
+        '200':
+          description: Успешное добавление маршрута в "Избранное"
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/routes/favorite/{routeId}:
     delete:
@@ -622,6 +751,7 @@ paths:
       tags:
         - users
       summary: Удаление маршрута из категории "Избранное" 
+      description: Это действие доступно только владельцу аккаунта
       security:
         - bearerAuth: []
       responses:
@@ -629,8 +759,10 @@ paths:
           description: Успешное удаление маршрута
         '401':
           description: Невалидный токен
-        '404':
-          description: Невалидный id
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
          
   /users/{userId}/friends:
     get:
@@ -646,14 +778,16 @@ paths:
       security:
        - bearerAuth: []
       responses:
-       '200':
-         description: Успешное получение данных
-         content: 
+        '200':
+          description: Успешное получение данных
+          content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetFriends'
-       '401':
-         description: Невалидный токен
+                $ref: '#/components/schemas/GetFriends'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/friends/{friendId}:
     delete:
@@ -671,13 +805,18 @@ paths:
       tags:
         - users
       summary: Удаление пользователя из списка друзей 
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       responses:
-       '204':
-         description: Успешное удаление данных
-       '401':
-         description: Невалидный токен
+        '204':
+          description: Успешное удаление данных
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/friends/request:
     post:
@@ -690,18 +829,24 @@ paths:
       tags:
         - users
       summary: Создание запроса на добавление в друзья
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PostFriendsRequest'
       responses:
-       '201':
-         description: Успешное создание запроса
-       '401':
-         description: Невалидный токен
+        '201':
+          description: Успешное создание запроса
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/friends/accepted:
     post:
@@ -714,13 +859,25 @@ paths:
       tags:
         - users
       summary: Принятие запроса на добавление в друзья
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostFriendsRequest'
       responses:
-       '204':
-         description: Успешное принятие запроса
-       '401':
-         description: Невалидный токен
+        '204':
+          description: Успешное принятие запроса
+          
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
   
   /users/{userId}/achievements:
     get:
@@ -736,14 +893,70 @@ paths:
       security:
        - bearerAuth: []
       responses:
-       '200':
-         description: Успешное получение данных
-         content: 
+        '200':
+          description: Успешное получение данных
+          content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetUserAchievements'
-       '401':
-         description: Невалидный токен
+                $ref: '#/components/schemas/GetUserAchievements'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+  
+  /users/{userId}/chats:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение списка чатов пользователя 
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetChats'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+  
+  /users/{userId}/chats/{chatId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Удаление пользователя из чата 
+      description: Это действие доступно только пользователю или создателю чата
+      security:
+       - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление пользователя из чата
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
   
   /achievements:
     get:
@@ -765,22 +978,26 @@ paths:
       tags:
         - achievements
       summary: Создание достижения
+      description: Это действие доступно только модератору
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PostAchievement'
       responses:
-       '201':
-         description: Успешное создание достижения
-         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetAchievement'
-       '401':
-         description: Невалидный токен
+        '201':
+          description: Успешное создание достижения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAchievement'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
   
   /achievements/{achievementId}:
     patch:
@@ -793,22 +1010,28 @@ paths:
       tags:
         - achievements
       summary: Изменение данных достижения
+      description: Это действие доступно только модератору
       security:
        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchAchievement'
       responses:
-       '201':
-         description: Успешное изменение достижения
-         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetAchievement'
-       '401':
-         description: Невалидный токен
+        '201':
+          description: Успешное изменение достижения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAchievement'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
     delete:
       parameters:
         - name: achievementId
@@ -818,14 +1041,112 @@ paths:
             type: number
       tags:
         - achievements
-      summary: Изменение достижения по идентификатору
+      summary: Удаление достижения из системы
+      description: Это действие доступно только модератору
       security:
        - bearerAuth: []
       responses:
-       '204':
-         description: Успешное удаление достижения
-       '401':
-         description: Невалидный токен
+        '204':
+          description: Успешное удаление достижения
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
+    
+  /chats/{chatId}:
+    get:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+      - chats
+      summary: Получение полной информации о чате
+      description: Это действие доступно только пользователю чата
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChat'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
+  
+  /chats/{chatId}/messages:
+    get:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: lastId
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Получение списка сообщений чата
+      description: Это действие доступно только пользователю чата
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessages'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
+    post:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Добавление сообщение в чат
+      description: Это действие доступно только пользователю чата
+      security:
+       - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMessage'
+      responses:
+        '200':
+          description: Успешное добавление сообщения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessage'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
       
       
 
@@ -848,7 +1169,6 @@ components:
         next_page:
           type: string
           example: "http://localhost:80/endpoint?page=3"
-        
   
     AuthInfo:
       type: object
@@ -990,19 +1310,6 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/FullPlace'
-  
-    UserShort:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 24
-        username:
-          type: string
-          example: "Юрий Константинопольский"
-        avatar:
-          type: string
-          example: "images/default.jpeg"
       
     Comment:
       type: object
@@ -1019,7 +1326,7 @@ components:
         author:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/UserShort'
+            - $ref: '#/components/schemas/ShortUser'
     
     PostComment:
       type: object
@@ -1074,7 +1381,7 @@ components:
         creator: 
           type: object
           oneOf:
-            - $ref: '#/components/schemas/UserShort'
+            - $ref: '#/components/schemas/ShortUser'
             
     FullRoute:
       type: object
@@ -1103,7 +1410,7 @@ components:
         creator: 
           type: object
           oneOf:
-            - $ref: '#/components/schemas/UserShort'
+            - $ref: '#/components/schemas/ShortUser'
     
     PatchRoute:
       type: object
@@ -1159,10 +1466,37 @@ components:
           type: number
           example: 1
     
+    PostActiveRoute:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+    
+    PostRoutePointCompleted:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+    
     PutRoute:
       type: object
       oneOf:
         - $ref: '#/components/schemas/PostRoute'
+    
+    ShortUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 24
+        username:
+          type: string
+          example: "Юрий Константинопольский"
+        avatar:
+          type: string
+          example: "images/default.jpeg"
 
     User:
       type: object
@@ -1171,11 +1505,12 @@ components:
           type: number
           example: 1
         username:
-          type: number
+          type: string
           example: "Aboba"
         avatar:
-          type: string
-          example: "images/avatar.jpg"
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/UserAvatar' 
     
     UserAvatar:
       type: object
@@ -1305,5 +1640,102 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/Achievement'
+    
+    Message:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 55
+        message:
+          type: string
+          example: "Крутое место"
+        created_at:
+          type: string
+          example: "2023-10-01 11:16:54"
+        sender:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/ShortUser'
+    
+    PostMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Это сообщение'
+    
+    GetMessage:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Message'
+    
+    GetMessages:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Message'
+    
+    ShortChat:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: "Чат для тех, кто любит проходить супер крутой маршрут по лесу"
+        last_message:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Message'
+    
+    FullChat:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: "Чат для тех, кто любит проходить супер крутой маршрут по лесу"
+        creator:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/ShortUser'
+        members:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ShortUser'
+        messages:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Message'
+    
+    GetChat:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FullChat'
+    
+    GetChats:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ShortChat'
+        
             
           
