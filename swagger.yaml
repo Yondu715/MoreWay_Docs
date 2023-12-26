@@ -1054,6 +1054,32 @@ paths:
           description: Недостаточно прав
         '400':
           description: Невалидные данные
+  
+  /chats:
+    post:
+      tags:
+        - chats
+      summary: Создание чата
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostChat'
+      responses:
+        '201':
+          description: Успешное создание чата
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChat'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
     
   /chats/{chatId}:
     get:
@@ -1064,7 +1090,7 @@ paths:
           schema:
             type: number
       tags:
-      - chats
+        - chats
       summary: Получение полной информации о чате
       description: Это действие доступно только пользователю чата
       security:
@@ -1129,7 +1155,6 @@ paths:
       security:
        - bearerAuth: []
       requestBody:
-        required: true
         content:
           application/json:
             schema:
@@ -1736,6 +1761,24 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/ShortChat'
+    
+    PostChat:
+      type: object
+      properties:
+        creator_id:
+          type: number
+          example: 1
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 2
+        route_id:
+          type: number
+          example: 5
         
             
           
