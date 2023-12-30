@@ -13,6 +13,8 @@ tags:
     description: Маршруты
   - name: users
     description: Пользователи
+  - name: friends
+    description: Друзья
   - name: achievements
     description: Достижения
   - name: chats
@@ -252,6 +254,10 @@ paths:
       responses:
         '201':
           description: Успешное создание маршрута
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
   
@@ -301,6 +307,10 @@ paths:
       responses:
         '200':
           description: Успешное обновление маршрута
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
         '400':
@@ -728,6 +738,10 @@ paths:
       responses:
         '200':
           description: Успешное добавление маршрута в "Избранное"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
         '403':
@@ -818,7 +832,33 @@ paths:
         '400':
           description: Невалидные данные
   
-  /users/{userId}/friends/request:
+  /users/{userId}/friends/requests:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Получение списка запросов в друзья от других пользователей
+      description: Это действие доступно только владельцу аккаунта
+      security:
+       - bearerAuth: []
+      responses:
+        '201':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetFriendsRequests'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
     post:
       parameters:
         - name: userId
@@ -841,6 +881,10 @@ paths:
       responses:
         '201':
           description: Успешное создание запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFriendsRequest'
         '401':
           description: Невалидный токен
         '403':
@@ -928,35 +972,6 @@ paths:
           description: Невалидный токен
         '400':
           description: Невалидные данные
-  
-  /users/{userId}/chats/{chatId}:
-    delete:
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: number
-        - name: chatId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - users
-      summary: Удаление пользователя из чата 
-      description: Это действие доступно только пользователю или создателю чата
-      security:
-       - bearerAuth: []
-      responses:
-        '204':
-          description: Успешное удаление пользователя из чата
-        '401':
-          description: Невалидный токен
-        '400':
-          description: Невалидные данные
-        '403':
-          description: Недостаточно прав
   
   /achievements:
     get:
@@ -1109,6 +1124,35 @@ paths:
         '400':
           description: Невалидные данные
   
+  /chats/{chatId}/users/{userId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Удаление пользователя из чата 
+      description: Это действие доступно только пользователю или создателю чата
+      security:
+       - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление пользователя из чата
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
+  
   /chats/{chatId}/messages:
     get:
       parameters:
@@ -1172,7 +1216,75 @@ paths:
           description: Недостаточно прав
         '400':
           description: Невалидные данные
-      
+          
+  /chats/{chatId}/activity:
+    get:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: lastId
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Получение выбранного в чате маршрута
+      description: Это действие доступно только пользователю чата
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoute'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
+    post:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: lastId
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Изменение выбранного в чате маршрута
+      description: Это действие доступно только владельцу чата
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostChatActivity'
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoute'
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
       
 
 components:
@@ -1428,6 +1540,9 @@ components:
               index:
                 type: number
                 example: 1
+              is_completed:
+                type: boolean
+                example: false
               place:
                 type: object
                 oneOf:
@@ -1586,6 +1701,23 @@ components:
             oneOf:
               - $ref: '#/components/schemas/User'
     
+    GetFriendsRequests:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ShortUser'
+    
+    GetFriendsRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/ShortUser'
+    
     PostFriendsRequest:
       type: object
       properties:
@@ -1734,7 +1866,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-        members:
+        users:
           type: array
           items:
             oneOf:
@@ -1779,6 +1911,12 @@ components:
         route_id:
           type: number
           example: 5
+    
+    PostChatActivity:
+      type: object
+      properties:
+        route_id:
+          type: number
+          example: 1
         
             
-          
