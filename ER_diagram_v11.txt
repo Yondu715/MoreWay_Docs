@@ -1,0 +1,222 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table friends {
+  id integer [pk]
+  following_user_id integer
+  followed_user_id integer
+  is_accepted boolean
+}
+
+Table users {
+  id integer [pk]
+  avatar string
+  email email
+  password varchar
+  username varchar
+  role_id integer
+}
+
+Table roles {
+  id integer [pk]
+  name varchar
+}
+
+Table places {
+  id integer [pk]
+  title varchar
+  description varchar
+  lat float
+  lon float
+  locality_id integer
+  type_id integer
+}
+
+Table place_comments {
+  id integer [pk]
+  text varchar
+  author_id integer
+  place_id integer
+}
+
+Table localities {
+  id integer [pk]
+  name varchar
+}
+
+Table place_images {
+  id integer [pk]
+  path varchar
+  place_id integer
+}
+
+Table routes {
+  id integer [pk]
+  title varchar
+  creator_id integer
+}
+
+Table user_favorite_routes {
+  id integer [pk]
+  user_id integer
+  route_id integer
+}
+
+Table route_points {
+  id integer [pk]
+  index integer
+  place_id integer
+  route_id integer
+}
+
+Table chats {
+  id integer [pk]
+  title varchar
+  creator_id integer
+}
+
+Table chat_messages {
+  id integer [pk]
+  text varchar
+  sender_id integer
+  chat_id integer
+}
+
+Table chat_members {
+  id integer [pk]
+  user_id integer
+  chat_id integer
+}
+
+Table achievements {
+  id integer [pk]
+  title varchar
+  description varchar
+  target integer
+  type_id integer
+  image varchar
+}
+
+Table achievements_progress {
+  id integer [pk]
+  user_id integer
+  achievement_id integer
+  progress integer
+}
+
+Table user_route_progress {
+  id integer [pk]
+  user_id integer
+  route_point_id integer
+  is_completed boolean
+}
+
+Table rating_places {
+  id integer [pk]
+  user_id integer
+  place_id integer
+  rating integer
+}
+
+Table route_comments {
+  id integer [primary key]
+  text varchar
+  author_id integer
+  route_id integer
+}
+
+Table rating_routes {
+  id integer [pk]
+  user_id integer
+  route_id integer
+  rating integer
+}
+
+Table user_active_routes {
+  id integer [pk]
+  user_id integer
+  route_id integer
+}
+
+Table place_types {
+  id integer [pk]
+  name varchar
+}
+
+Table achievement_types {
+  id integer [pk]
+  name varchar
+  value integer
+}
+
+Table chat_active_routes {
+  id integer [pk]
+  chat_id integer
+  route_id integer
+}
+
+Ref: chats.id - chat_active_routes.chat_id
+
+Ref: routes.id < chat_active_routes.route_id
+
+Ref: places.type_id > place_types.id
+
+Ref: routes.id - user_active_routes.route_id
+
+Ref: users.id - user_active_routes.user_id
+
+Ref: routes.id < rating_routes.route_id
+
+Ref: users.id < rating_routes.user_id
+
+Ref: routes.id < route_comments.route_id
+
+Ref: users.id < route_comments.author_id
+
+Ref: users.id < rating_places.user_id
+
+Ref: places.id < rating_places.place_id
+
+Ref: route_points.id < user_route_progress.route_point_id
+
+Ref: users.id < user_route_progress.user_id
+
+Ref: users.id < achievements_progress.user_id
+
+Ref: achievements.type_id > achievement_types.id
+
+Ref: achievements.id < achievements_progress.achievement_id
+
+Ref: users.id < chat_members.user_id
+
+Ref: chats.id < chat_members.chat_id
+
+Ref: chat_messages.chat_id > chats.id
+
+Ref: chat_messages.sender_id > users.id
+
+Ref: chats.creator_id > users.id
+
+Ref: place_comments.place_id > places.id
+
+Ref: place_comments.author_id > users.id
+
+Ref: routes.creator_id > users.id
+
+Ref: route_points.place_id > places.id
+
+Ref: route_points.route_id > routes.id
+
+Ref: user_favorite_routes.route_id > routes.id
+
+Ref: user_favorite_routes.user_id > users.id
+
+Ref: place_images.place_id > places.id
+
+Ref: localities.id < places.locality_id
+
+Ref: roles.id < users.role_id
+
+Ref: users.id < friends.following_user_id
+
+Ref: users.id < friends.followed_user_id
