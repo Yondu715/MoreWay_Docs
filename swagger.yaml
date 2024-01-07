@@ -13,12 +13,10 @@ tags:
     description: Маршруты
   - name: users
     description: Пользователи
-  - name: friends
-    description: Друзья
-  - name: achievements
-    description: Достижения
   - name: chats
     description: Чаты
+  - name: weather
+    description: Погода
 paths:
   /auth/login:
     post:
@@ -32,7 +30,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AuthInfo'
-
       responses:
         '200':
           description: Успешная авторизация
@@ -72,8 +69,28 @@ paths:
               schema: 
                $ref: '#/components/schemas/AuthError'
   
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Выход из системы
+      security:
+        - bearerAuth: []
+      description: Разлогинить авторизованного пользователя
+      responses:
+        '204':
+          description: Успешный выход из системы
+        '401':
+          description: Невалидный токен
+  
   /places:
     get:
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: number
       tags:
         - places
       summary: Получение списка всех достопримечательностей, доступных в системе
@@ -105,6 +122,66 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetPlace'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+    
+    post:
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - places
+      summary: Добавление достопримечательности в систему
+      description: Это действие доступно только модератору
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPlace'
+      responses:
+        '200':
+          description: Успешное добавление достопримечательности
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetPlace'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+    
+    patch:
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - places
+      summary: Изменение данных достопримечательности
+      description: Это действие доступно только модератору
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPlace'
+      responses:
+        '200':
+          description: Успешное изменение данных
           content: 
             application/json:
               schema: 
@@ -225,6 +302,12 @@ paths:
           description: Невалидные данные
   /routes:
     get:
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: number
       tags:
         - routes
       summary: Получение списка всех маршрутов, доступных в системе 
@@ -333,34 +416,6 @@ paths:
       responses:
         '204':
           description: Успешное удаление маршрута
-        '401':
-          description: Невалидный токен
-        '400':
-          description: Невалидные данные
-        '403':
-          description: Недостаточно прав
-    put:
-      parameters:
-        - name: routeId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - routes
-      summary: Изменение маршрута
-      description: Это действие доступно только автору маршрута
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-         application/json:
-           schema:
-             $ref: '#/components/schemas/PutRoute'
-      responses:
-        '201':
-          description: Успешное изменение маршрута
         '401':
           description: Невалидный токен
         '400':
@@ -612,6 +667,31 @@ paths:
           description: Невалидные данные
         '403':
           description: Недостаточно прав
+  
+  /users/search:
+    get:
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Поиск пользователей по полю username
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetUsers'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
          
   /users/{userId}/routes:
     get:
@@ -638,7 +718,7 @@ paths:
         '400':
           description: Невалидные данные
   
-  /users/{userId}/routes/active:
+  /users/{userId}/active-route:
     get:
       parameters:
         - name: userId
@@ -692,7 +772,7 @@ paths:
         '400':
           description: Невалидные данные
         
-  /users/{userId}/routes/favorite:
+  /users/{userId}/favorite-routes:
     get:
       parameters:
         - name: userId
@@ -749,7 +829,7 @@ paths:
         '400':
           description: Невалидные данные
   
-  /users/{userId}/routes/favorite/{routeId}:
+  /users/{userId}/favorite-routes/{routeId}:
     delete:
       parameters:
         - name: userId
@@ -891,9 +971,7 @@ paths:
           description: Недостаточно прав
         '400':
           description: Невалидные данные
-  
-  /users/{userId}/friends/accepted:
-    post:
+    put:
       parameters:
         - name: userId
           in: path
@@ -911,11 +989,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostFriendsRequest'
+              $ref: '#/components/schemas/PutFriendsRequest'
       responses:
         '204':
           description: Успешное принятие запроса
           
+        '401':
+          description: Невалидный токен
+        '403':
+          description: Недостаточно прав
+        '400':
+          description: Невалидные данные
+  
+  /users/{userId}/friends/requests/{requestId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - users
+      summary: Отклонение запроса на добавление в друзья
+      description: Это действие доступно только владельцу аккаунта
+      security:
+       - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное отклонение запроса
         '401':
           description: Невалидный токен
         '403':
@@ -973,103 +1080,6 @@ paths:
         '400':
           description: Невалидные данные
   
-  /achievements:
-    get:
-      tags:
-        - achievements
-      summary: Получение списка достижений, доступных в системе
-      security:
-       - bearerAuth: []
-      responses:
-       '200':
-         description: Успешное получение данных
-         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetAchievements'
-       '401':
-         description: Невалидный токен
-    post:
-      tags:
-        - achievements
-      summary: Создание достижения
-      description: Это действие доступно только модератору
-      security:
-       - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostAchievement'
-      responses:
-        '201':
-          description: Успешное создание достижения
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetAchievement'
-        '401':
-          description: Невалидный токен
-        '403':
-          description: Недостаточно прав
-  
-  /achievements/{achievementId}:
-    patch:
-      parameters:
-        - name: achievementId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - achievements
-      summary: Изменение данных достижения
-      description: Это действие доступно только модератору
-      security:
-       - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchAchievement'
-      responses:
-        '201':
-          description: Успешное изменение достижения
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetAchievement'
-        '401':
-          description: Невалидный токен
-        '403':
-          description: Недостаточно прав
-        '400':
-          description: Невалидные данные
-    delete:
-      parameters:
-        - name: achievementId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - achievements
-      summary: Удаление достижения из системы
-      description: Это действие доступно только модератору
-      security:
-       - bearerAuth: []
-      responses:
-        '204':
-          description: Успешное удаление достижения
-        '401':
-          description: Невалидный токен
-        '403':
-          description: Недостаточно прав
-        '400':
-          description: Невалидные данные
-  
   /chats:
     post:
       tags:
@@ -1124,6 +1134,40 @@ paths:
         '400':
           description: Невалидные данные
   
+  /chats/{chatId}/users:
+    post:
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - chats
+      summary: Добавление пользователей в чат
+      description: Это действие доступно только создателю чата
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostChatUsers'
+      responses:
+        '201':
+          description: Успешное добавление пользователя в чат
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/GetChat'
+        '401':
+          description: Невалидный токен
+        '400':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
+  
+  
   /chats/{chatId}/users/{userId}:
     delete:
       parameters:
@@ -1140,7 +1184,7 @@ paths:
       tags:
         - chats
       summary: Удаление пользователя из чата 
-      description: Это действие доступно только пользователю или создателю чата
+      description: Это действие доступно только создателю чата
       security:
        - bearerAuth: []
       responses:
@@ -1285,6 +1329,34 @@ paths:
           description: Недостаточно прав
         '400':
           description: Невалидные данные
+  
+  /weather/current:
+    get:
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - weather
+      summary: Получение информации о текущей погоде
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetWeather'
+        '401':
+          description: Невалидный токен
       
 
 components:
@@ -1320,7 +1392,7 @@ components:
     AuthError:
       type: object
       properties:
-        errors: 
+        error: 
           type: object
           properties:
             email:
@@ -1329,6 +1401,7 @@ components:
             password:
               type: string
               example: "Поле password должно быть строкой"
+              
     AuthSuccess:
       type: object
       properties:
@@ -1431,10 +1504,13 @@ components:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/ShortPlace'
+          type: object
+          properties:
+            places:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/ShortPlace'
         meta:
           type: object
           oneOf:
@@ -1445,8 +1521,35 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/FullPlace'
+          properties:
+            place:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/FullPlace'
+    
+    PostPlace:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Парк Ангелов"
+        lat:
+          type: number
+          example: 12345.65
+        lon:
+          type: number
+          example: 98983.34
+        description:
+          type: string
+          example: "Одно из прекраснейших мест города Кемерово..."
+        locality_id:
+          type: number
+          example: 5
+        images:
+          type: array
+          items:
+            type: string
+            example: "images/LKJkljg33POJB123oij.jpeg"
       
     Comment:
       type: object
@@ -1476,10 +1579,13 @@ components:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf: 
-              - $ref: '#/components/schemas/Comment' 
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                oneOf: 
+                  - $ref: '#/components/schemas/Comment' 
         meta:
           type: object
           oneOf:
@@ -1490,8 +1596,11 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/Comment'
+          properties:
+            comment:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/Comment'
 
     PostRating:
       type: object
@@ -1551,23 +1660,19 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-    
-    PatchRoute:
-      type: object
-      properties:
-        title:
-          type: string
-          example: "Другой супер маршрут по лесу"
   
     GetRoutes:
       type: object
       properties:
-        data: 
-          type: array
-          items:
-            type: object
-            oneOf:
-              - $ref: '#/components/schemas/ShortRoute'
+        data:
+          type: object
+          properties:
+            routes:
+              type: array
+              items:
+                type: object
+                oneOf:
+                  - $ref: '#/components/schemas/ShortRoute'
         meta:
           type: object
           oneOf:
@@ -1578,8 +1683,11 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/FullRoute'
+          properties:
+            route:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/FullRoute'
             
     PostRoute:
       type: object
@@ -1599,31 +1707,34 @@ components:
                 type: number
                 example: 2
     
+    PatchRoute:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/PostRoute'
+    
     PostFavoriteRoute:
       type: object
       properties:
-        id:
+        route_id:
           type: number
           example: 1
     
     PostActiveRoute:
       type: object
       properties:
-        id:
+        route_id:
           type: number
           example: 1
     
     PostRoutePointCompleted:
       type: object
       properties:
-        id:
+        route_id:
           type: number
           example: 1
-    
-    PutRoute:
-      type: object
-      oneOf:
-        - $ref: '#/components/schemas/PostRoute'
+        route_point_id:
+          type: number
+          example: 1
     
     ShortUser:
       type: object
@@ -1664,8 +1775,11 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/UserAvatar'
+          properties:
+            avatar:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/UserAvatar'
             
     PostUserPassword:
       type: object
@@ -1682,8 +1796,22 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/User'
+          properties:
+            user:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/User'
+    
+    GetUsers:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            users:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/User'
     
     PatchUser:
       type: object
@@ -1696,32 +1824,48 @@ components:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/User'
+          type: object
+          properties:
+            friends:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/User'
     
     GetFriendsRequests:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/ShortUser'
+          type: object
+          properties:
+            requests:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/ShortUser'
     
     GetFriendsRequest:
       type: object
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/ShortUser'
+          properties:
+            request:
+              type: object
+              oneOf:
+                - $ref: '#/components/schemas/ShortUser'
     
     PostFriendsRequest:
       type: object
       properties:
         friend_id:
+          type: number
+          example: 1
+    
+    PutFriendsRequest:
+      type: object
+      properties:
+        request_id:
           type: number
           example: 1
     
@@ -1740,63 +1884,39 @@ components:
         target:
           type: number
           example: 1
+        type:
+          type: string
+          example: 'gold'
+        image:
+          type: string
+          example: '/images/achievement.jpeg'
     
-    GetAchievement:
-      type: object
-      properties:
-        data: 
-          type: object
-          oneOf:
-            - $ref: '#/components/schemas/Achievement'
+    # GetAchievement:
+    #   type: object
+    #   properties:
+    #     data: 
+    #       type: object
+    #       oneOf:
+    #         - $ref: '#/components/schemas/Achievement'
     
     GetUserAchievements:
       type: object
       properties:
-        data: 
-          type: array
-          items:
-            type: object
-            oneOf:
-              - $ref: '#/components/schemas/Achievement'
-            properties:
-              current_progress:
-                type: number
-                example: 0
-    
-    PostAchievement:
-      type: object
-      properties:
-        title:
-          type: string
-          example: 'Исследователь'
-        description:
-          type: string
-          example: 'Необходимо пройти 1 маршрут'
-        target:
-          type: number
-          example: 1
-    
-    PatchAchievement:
-      type: object
-      properties:
-        title:
-          type: string
-          example: 'Исследователь'
-        description:
-          type: string
-          example: 'Необходимо пройти 1 маршрут'
-        target:
-          type: number
-          example: 1
-    
-    GetAchievements:
-      type: object
-      properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Achievement'
+          type: object
+          properties:
+            achievements:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/Achievement'
+                properties:
+                  current_progress:
+                    type: number
+                    example: 0
+                  value:
+                    type: number
+                    example: 5
     
     Message:
       type: object
@@ -1827,17 +1947,22 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/Message'
+          properties:
+            message:
+              oneOf:
+                - $ref: '#/components/schemas/Message'
     
     GetMessages:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Message'
+          type: object
+          properties:
+            messages:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/Message'
     
     ShortChat:
       type: object
@@ -1876,23 +2001,32 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/Message'
+        activity:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/ShortRoute'
     
     GetChat:
       type: object
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/FullChat'
+          properties:
+            chat:
+              oneOf:
+                - $ref: '#/components/schemas/FullChat'
     
     GetChats:
       type: object
       properties:
         data:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/ShortChat'
+          type: object
+          properties:
+            chats:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/ShortChat'
     
     PostChat:
       type: object
@@ -1912,11 +2046,43 @@ components:
           type: number
           example: 5
     
+    PostChatUsers:
+      type: object
+      properties:
+        users_id:
+          type: array
+          items:
+            type: number
+            example: 1
+    
     PostChatActivity:
       type: object
       properties:
         route_id:
           type: number
           example: 1
+    
+    Weather:
+      type: object
+      properties:
+        temp:
+          type: integer
+          example: 15
+        kind:
+          type: string
+          example: 'Солнечно'
+        icon:
+          type: string
+          example: '/images/sunny.jpeg'
+    
+    GetWeather:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            weather:
+              oneOf:
+                - $ref: '#/components/schemas/Weather'
         
             
