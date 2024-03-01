@@ -1,0 +1,15 @@
+@startuml
+actor MobileApp as mobile
+participant Backend as backend
+database Database as db
+mobile->backend: Получение данных
+backend->backend: Проверка\naccess token
+alt Токен валиден
+backend->db: Получение\nданных из бд
+db->db: Поиск данных
+db->backend: Данные
+backend->mobile: Данные
+else alt Токен невалиден
+backend->mobile: Сообщение об\nистечении жизни\nтокена
+end alt
+@enduml

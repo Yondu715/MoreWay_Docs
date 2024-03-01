@@ -1,0 +1,18 @@
+@startuml
+participant Storage as storage
+actor MobileApp as mobile
+participant Backend as backend
+database Database as db
+mobile->backend: Данные для\nаутентификации
+backend->backend: Проверить валидность\nданных
+alt Данные валидны
+backend->db: Найти пользователя
+db->db: Поиск\nпользователя
+db->backend: Данные\nпользователя
+backend->backend: Генерация\n токена
+backend->mobile: Успешная\nаутентификация
+mobile->storage: access token\nrefresh token
+else Данные не валидны
+backend->mobile: Сообщение\nоб ошибке
+end alt
+@enduml
