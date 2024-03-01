@@ -1,0 +1,36 @@
+@startuml Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define MATERIAL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/material
+!include DEVICONS2/flutter.puml
+!include DEVICONS2/chrome.puml
+!include DEVICONS2/laravel.puml
+!include DEVICONS2/mysql.puml
+!include MATERIAL/map.puml
+
+'LAYOUT_WITH_LEGEND()'
+
+Person(user, "Пользователь-посетитель", "Путешествует по достопримечательностям Кузбасса")
+Person(moderator, "Пользователь-модератор", "Просматривает и поддерживает в актульном состоянии список достопримечательностей")
+
+System_Boundary(frontend, "Frontend") {
+    Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
+    Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
+}
+System_Ext(googleMaps, "Google Maps API", "Интерфейс для работы с картами при помощи Google Maps SDK", $sprite="map")
+
+System_Boundary(backend, "Backend") {
+    Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
+}
+
+ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
+
+Rel(user, mobileApp, "Uses", "mobile app")
+Rel(moderator, webApp, "Uses", "web app")
+Rel(mobileApp, api, "Uses", "https/json, wss")
+Rel(webApp, api, "Uses", "https/json, html")
+Rel_R(api, db, "Reads/Writes", "CRUD")
+Rel_L(mobileApp, googleMaps, "Uses", "https/json")
+
+@enduml

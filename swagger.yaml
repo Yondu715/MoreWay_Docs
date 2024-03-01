@@ -397,38 +397,38 @@ paths:
           description: Невалидный токен
         '400':
           description: Невалидные данные
-    patch:
-      parameters:
-        - name: routeId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - routes
-      summary: Обновление данных маршрута
-      description: Это действие доступно только автору маршрута
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-         application/json:
-           schema:
-             $ref: '#/components/schemas/PatchRoute'
-      responses:
-        '200':
-          description: Успешное обновление маршрута
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetRoute'
-        '401':
-          description: Невалидный токен
-        '400':
-          description: Невалидные данные
-        '403':
-          description: Недостаточно прав
+    # patch:
+    #   parameters:
+    #     - name: routeId
+    #       in: path
+    #       required: true
+    #       schema:
+    #         type: number
+    #   tags:
+    #     - routes
+    #   summary: Обновление данных маршрута
+    #   description: Это действие доступно только автору маршрута
+    #   security:
+    #     - bearerAuth: []
+    #   requestBody:
+    #     required: true
+    #     content:
+    #     application/json:
+    #       schema:
+    #         $ref: '#/components/schemas/PatchRoute'
+    #   responses:
+    #     '200':
+    #       description: Успешное обновление маршрута
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/GetRoute'
+    #     '401':
+    #       description: Невалидный токен
+    #     '400':
+    #       description: Невалидные данные
+    #     '403':
+    #       description: Недостаточно прав
     delete:
       parameters:
         - name: routeId
@@ -439,7 +439,7 @@ paths:
       tags:
         - routes
       summary: Удаление маршрута из системы
-      description: Это действие доступно только автору маршрута и модератору
+      description: Это действие доступно только модератору
       security:
         - bearerAuth: []
       responses:
