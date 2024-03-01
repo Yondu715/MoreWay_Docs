@@ -3,17 +3,18 @@
 
 Table friends {
   id integer [pk]
-  following_user_id integer
-  followed_user_id integer
+  user_id integer
+  friend_id integer
   is_accepted boolean
 }
 
 Table users {
   id integer [pk]
-  avatar string
+  avatar varchar
   email email
   password varchar
-  username varchar
+  name varchar
+  email_verified_at timestamp
   role_id integer
 }
 
@@ -24,7 +25,7 @@ Table roles {
 
 Table places {
   id integer [pk]
-  title varchar
+  name varchar
   description varchar
   lat float
   lon float
@@ -46,13 +47,13 @@ Table localities {
 
 Table place_images {
   id integer [pk]
-  path varchar
+  image varchar
   place_id integer
 }
 
 Table routes {
   id integer [pk]
-  title varchar
+  name varchar
   creator_id integer
 }
 
@@ -71,7 +72,7 @@ Table route_points {
 
 Table chats {
   id integer [pk]
-  title varchar
+  name varchar
   creator_id integer
 }
 
@@ -90,28 +91,28 @@ Table chat_members {
 
 Table achievements {
   id integer [pk]
-  title varchar
+  name varchar
   description varchar
   target integer
   type_id integer
   image varchar
 }
 
-Table achievements_progress {
+Table user_achivement_progresses {
   id integer [pk]
   user_id integer
   achievement_id integer
   progress integer
 }
 
-Table user_route_progress {
+Table user_route_progresses {
   id integer [pk]
   user_id integer
   route_point_id integer
   is_completed boolean
 }
 
-Table rating_places {
+Table place_ratings {
   id integer [pk]
   user_id integer
   place_id integer
@@ -125,7 +126,7 @@ Table route_comments {
   route_id integer
 }
 
-Table rating_routes {
+Table route_ratings {
   id integer [pk]
   user_id integer
   route_id integer
@@ -165,27 +166,27 @@ Ref: routes.id - user_active_routes.route_id
 
 Ref: users.id - user_active_routes.user_id
 
-Ref: routes.id < rating_routes.route_id
+Ref: routes.id < route_ratings.route_id
 
-Ref: users.id < rating_routes.user_id
+Ref: users.id < route_ratings.user_id
 
 Ref: routes.id < route_comments.route_id
 
 Ref: users.id < route_comments.author_id
 
-Ref: users.id < rating_places.user_id
+Ref: users.id < place_ratings.user_id
 
-Ref: places.id < rating_places.place_id
+Ref: places.id < place_ratings.place_id
 
-Ref: route_points.id < user_route_progress.route_point_id
+Ref: route_points.id < user_route_progresses.route_point_id
 
-Ref: users.id < user_route_progress.user_id
+Ref: users.id < user_route_progresses.user_id
 
-Ref: users.id < achievements_progress.user_id
+Ref: users.id < user_achivement_progresses.user_id
 
 Ref: achievements.type_id > achievement_types.id
 
-Ref: achievements.id < achievements_progress.achievement_id
+Ref: achievements.id < user_achivement_progresses.achievement_id
 
 Ref: users.id < chat_members.user_id
 
@@ -217,6 +218,6 @@ Ref: localities.id < places.locality_id
 
 Ref: roles.id < users.role_id
 
-Ref: users.id < friends.following_user_id
+Ref: users.id < friends.user_id
 
-Ref: users.id < friends.followed_user_id
+Ref: users.id < friends.friend_id
