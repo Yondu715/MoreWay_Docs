@@ -162,7 +162,7 @@ Ref: routes.id < chat_active_routes.route_id
 
 Ref: places.type_id > place_types.id
 
-Ref: routes.id - user_active_routes.route_id
+Ref: routes.id < user_active_routes.route_id
 
 Ref: users.id - user_active_routes.user_id
 
