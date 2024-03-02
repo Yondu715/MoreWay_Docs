@@ -5,7 +5,12 @@ Table friends {
   id integer [pk]
   user_id integer
   friend_id integer
-  is_accepted boolean
+  relationship_id integer
+}
+
+Table friend_relationship_types {
+  id integer [pk]
+  name varchar
 }
 
 Table users {
@@ -14,8 +19,13 @@ Table users {
   email email
   password varchar
   name varchar
-  email_verified_at timestamp
   role_id integer
+}
+
+Table user_scores {
+  id integer [pk]
+  score integer
+  user_id integer
 }
 
 Table roles {
@@ -221,3 +231,7 @@ Ref: roles.id < users.role_id
 Ref: users.id < friends.user_id
 
 Ref: users.id < friends.friend_id
+
+Ref: friends.relationship_id > friend_relationship_types.id
+
+Ref: users.id - user_scores.user_id
