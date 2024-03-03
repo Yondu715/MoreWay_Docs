@@ -49,7 +49,7 @@ paths:
           content: 
             application/json:
               schema: 
-                $ref: '#/components/schemas/AuthError'
+                $ref: '#/components/schemas/Error422'
                
   /auth/register:
     post:
@@ -72,7 +72,7 @@ paths:
           content: 
             application/json:
               schema: 
-                $ref: '#/components/schemas/AuthError'
+                $ref: '#/components/schemas/Error422'
   
   /auth/logout:
     post:
@@ -92,7 +92,7 @@ paths:
     get:
       tags:
         - auth
-      summary: Получение информации о авторизованном пользователе
+      summary: Получение информации об авторизованном пользователе
       security:
         - bearerAuth: []
       description: Получение информации из токена
@@ -136,7 +136,7 @@ paths:
             type: string
       tags:
         - places
-      summary: Получение списка всех достопримечательностей, доступных в системе
+      summary: Получение списка всех достопримечательностей
       security:
         - bearerAuth: [] 
       responses:
@@ -153,7 +153,7 @@ paths:
     get:
       tags:
         - places
-      summary: Получение списка самых популярных достопримечательностей, доступных в системе
+      summary: Получение списка самых популярных достопримечательностей
       security:
         - bearerAuth: [] 
       responses:
@@ -170,7 +170,7 @@ paths:
     get:
       tags:
         - places
-      summary: Получение списка лучших достопримечательностей, доступных в системе
+      summary: Получение списка лучших достопримечательностей
       security:
         - bearerAuth: [] 
       responses:
@@ -198,7 +198,7 @@ paths:
             type: number
       tags:
         - places
-      summary: Получение списка ближайших к пользователю достопримечательностей, доступных в системе
+      summary: Получение списка ближайших к пользователю достопримечательностей
       security:
         - bearerAuth: [] 
       responses:
@@ -236,6 +236,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
           
   /places/{placeId}/comments:
     get:
@@ -266,6 +270,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
 
     post:
       parameters:
@@ -296,6 +304,11 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
+          
           
   /places/{placeId}/rating:
     put:
@@ -323,6 +336,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
           
   /routes:
     get:
@@ -344,7 +361,7 @@ paths:
             type: string
       tags:
         - routes
-      summary: Получение списка всех маршрутов, доступных в системе 
+      summary: Получение списка всех маршрутов
       security:
         - bearerAuth: []
       responses:
@@ -402,6 +419,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
 
     delete:
       parameters:
@@ -439,7 +460,7 @@ paths:
         content:
          application/json:
            schema:
-             $ref: '#/components/schemas/PatchRoutePointCompleted'
+             $ref: '#/components/schemas/PatchRoutePointStatus'
       responses:
         '200':
           description: Успешное прохождение этапа 
@@ -477,6 +498,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     post:
       parameters:
         - name: routeId
@@ -506,6 +531,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /routes/{routeId}/rating:
     put:
@@ -531,10 +560,14 @@ paths:
           description: Рейтинг был успешно добавлен/изменен
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
         '409':
           description: Пользователь уже поставил оценку
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}:
     get:
@@ -560,6 +593,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     patch:
       parameters:
         - name: userId
@@ -592,6 +629,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     delete:
       parameters:
         - name: userId
@@ -602,7 +643,7 @@ paths:
       tags:
         - users
       summary: Удаление аккаунта пользователя 
-      description: Это действие доступно только владельцу аккаунта и модератору
+      description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
       responses:
@@ -614,6 +655,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/avatar:
     patch:
@@ -642,6 +687,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/password:
     post:
@@ -668,10 +717,14 @@ paths:
           description: Успешное изменение пароля
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
         '403':
           description: Недостаточно прав
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/search:
     post:
@@ -697,6 +750,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
          
   /users/{userId}/routes:
     get:
@@ -722,6 +779,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/active-route:
     get:
@@ -747,6 +808,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     post:
       parameters:
         - name: userId
@@ -776,6 +841,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
         
   /users/{userId}/favorite-routes:
     get:
@@ -806,6 +875,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     post:
       parameters:
         - name: userId
@@ -815,7 +888,7 @@ paths:
             type: number
       tags:
        - routes
-      summary: Добавление маршрута в "Избранное" 
+      summary: Добавление маршрута в категорию "Избранное" 
       description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
@@ -838,6 +911,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/favorite-routes/{routeId}:
     delete:
@@ -863,10 +940,14 @@ paths:
           description: Успешное удаление маршрута
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
         '403':
           description: Недостаточно прав
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
          
   
   /users/{userId}/achievements:
@@ -893,6 +974,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/chats:
     get:
@@ -918,6 +1003,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends:
     get:
@@ -948,6 +1037,10 @@ paths:
           description: Невалидный токен
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends/{friendId}:
     delete:
@@ -977,6 +1070,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends/requests:
     get:
@@ -1005,6 +1102,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
           
   /friends/requests:
     post:
@@ -1033,6 +1134,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     put:
       tags:
         - friends
@@ -1056,6 +1161,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /friends/requests/{requestId}:
     delete:
@@ -1080,6 +1189,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /rating:
     get:
@@ -1124,6 +1237,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     
   /chats/{chatId}:
     get:
@@ -1152,6 +1269,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /chats/{chatId}/members:
     post:
@@ -1181,10 +1302,14 @@ paths:
                $ref: '#/components/schemas/GetChat'
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
         '403':
           description: Недостаточно прав
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   
   /chats/{chatId}/members/{memberId}:
@@ -1211,10 +1336,14 @@ paths:
           description: Успешное удаление пользователя из чата
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
         '403':
           description: Недостаточно прав
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /chats/{chatId}/messages:
     get:
@@ -1248,6 +1377,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     post:
       parameters:
         - name: chatId
@@ -1279,6 +1412,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
           
   /chats/{chatId}/activity:
     get:
@@ -1312,6 +1449,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
     post:
       parameters:
         - name: chatId
@@ -1348,7 +1489,10 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
-      
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
 
 components:
   securitySchemes:
@@ -1368,18 +1512,18 @@ components:
           type: string
           example: "*******************"
           
-    AuthError:
+    Error422:
       type: object
       properties:
-        error: 
+        errors: 
           type: object
           properties:
-            email:
+            field1:
               type: string
-              example: "Поле email должно быть строкой"
-            password:
+              example: "Поле field1 должно быть строкой"
+            field2:
               type: string
-              example: "Поле password должно быть строкой"
+              example: "Поле field2 должно быть строкой"
               
     AuthSuccess:
       type: object
@@ -1658,7 +1802,7 @@ components:
           type: number
           example: 1
     
-    PatchRoutePointCompleted:
+    PatchRoutePointStatus:
       type: object
       properties:
         routeId:
@@ -1695,6 +1839,9 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/UserAvatar' 
+        score:
+          type: integer
+          example: 50
     
     UserAvatar:
       type: string
@@ -1737,6 +1884,9 @@ components:
         password:
           type: string
           example: 'abober'
+        score:
+          type: integer
+          example: 50
     
     GetAuthUser:
       type: object
