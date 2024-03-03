@@ -145,6 +145,7 @@ Table route_ratings {
 
 Table user_active_routes {
   id integer [pk]
+  is_group bool
   user_id integer
   route_id integer
 }
