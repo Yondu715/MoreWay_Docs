@@ -812,7 +812,7 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error422'
-    post:
+    put:
       parameters:
         - name: userId
           in: path
@@ -829,7 +829,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostActiveRoute'
+              $ref: '#/components/schemas/PutActiveRoute'
       responses:
         '200':
           description: Успешное изменение активного маршрута
@@ -1672,6 +1672,9 @@ components:
     PostComment:
       type: object
       properties:
+        userId:
+          type: number
+          example: 1
         comment:
           type: string
           example: "Одно из прекраснейших мест города Кемерово..."
@@ -1696,6 +1699,9 @@ components:
     PutRating:
       type: object
       properties:
+        userId:
+          type: number
+          example: 1
         rating:
           type: number
           example: 4.5
@@ -1776,6 +1782,9 @@ components:
         name:
           type: string
           example: "Супер маршрут по лесу"
+        creatorId:
+          type: number
+          example: 1
         routePoints:
           type: array
           items:
@@ -1795,7 +1804,7 @@ components:
           type: number
           example: 1
     
-    PostActiveRoute:
+    PutActiveRoute:
       type: object
       properties:
         routeId:
@@ -1805,6 +1814,9 @@ components:
     PatchRoutePointStatus:
       type: object
       properties:
+        userId:
+          type: number
+          example: 1
         routeId:
           type: number
           example: 1
