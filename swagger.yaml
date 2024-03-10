@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthSuccess'
+                $ref: '#/components/schemas/GetAccessToken'
         '401':
           description: Неправильный пароль или почта
         '422':
@@ -89,7 +89,7 @@ paths:
           description: Невалидный токен
   
   /auth/me:
-    post:
+    get:
       tags:
         - auth
       summary: Получение информации об авторизованном пользователе
@@ -151,6 +151,11 @@ paths:
           required: false
           schema:
             type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
       tags:
         - places
       summary: Получение списка всех достопримечательностей
@@ -388,6 +393,11 @@ paths:
           required: false
           schema:
             type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
       tags:
         - routes
       summary: Получение списка всех маршрутов
@@ -1618,20 +1628,6 @@ components:
             field2:
               type: string
               example: "Поле field2 должно быть строкой"
-              
-    AuthSuccess:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            user:
-              type: object
-              oneOf:
-                - $ref: '#/components/schemas/FullUser'
-            accessToken: 
-              type: string
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
     
     GetAccessToken:
       type: object
@@ -1743,6 +1739,12 @@ components:
               distance:
                 type: number
                 example: 4.5
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: number
+              example: 1
             
     GetPlace:
       type: object
@@ -1871,6 +1873,12 @@ components:
             type: object
             oneOf:
               - $ref: '#/components/schemas/ShortRoute'
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: number
+              example: 1
     
     GetRoute:
       type: object
