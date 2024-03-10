@@ -89,7 +89,7 @@ paths:
           description: Невалидный токен
   
   /auth/me:
-    get:
+    post:
       tags:
         - auth
       summary: Получение информации об авторизованном пользователе
@@ -103,6 +103,23 @@ paths:
             application/json:
               schema: 
                $ref: '#/components/schemas/GetAuthUser'
+        '401':
+          description: Невалидный токен
+  
+  /auth/refresh:
+    post:
+      tags:
+        - auth
+      summary: Обновление токена
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetAccessToken'
         '401':
           description: Невалидный токен
   
@@ -423,29 +440,6 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error422'
-
-    delete:
-      parameters:
-        - name: routeId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - routes
-      summary: Удаление маршрута из системы
-      description: Это действие доступно только создателю маршрута
-      security:
-        - bearerAuth: []
-      responses:
-        '204':
-          description: Успешное удаление маршрута
-        '401':
-          description: Невалидный токен
-        '422':
-          description: Невалидные данные
-        '403':
-          description: Недостаточно прав
   
   /routes/route-points/status:
     patch:
@@ -783,6 +777,34 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error422'
+  /users/{userId}/routes/{routeId}:
+    delete:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Удаление маршрута из системы
+      description: Это действие доступно только создателю маршрута
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Успешное удаление маршрута
+        '401':
+          description: Невалидный токен
+        '422':
+          description: Невалидные данные
+        '403':
+          description: Недостаточно прав
   
   /users/{userId}/active-route:
     get:
@@ -1535,6 +1557,16 @@ components:
               type: object
               oneOf:
                 - $ref: '#/components/schemas/FullUser'
+            accessToken: 
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    
+    GetAccessToken:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
             accessToken: 
               type: string
               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
