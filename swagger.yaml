@@ -584,6 +584,35 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error422'
+
+  /users:
+    get:
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - users
+      summary: Поиск пользователей
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GetUsers'
+        '401':
+          description: Невалидный токен
+        '422':
+          description: Невалидные данные
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error422'
   
   /users/{userId}:
     get:
@@ -745,35 +774,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
-  
-  /users/search:
-    post:
-      tags:
-        - users
-      summary: Поиск пользователей
-      security:
-       - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostUsersSearch'
-      responses:
-        '200':
-          description: Успешное получение данных
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/GetUsers'
-        '401':
-          description: Невалидный токен
         '422':
           description: Невалидные данные
           content: 
@@ -2035,13 +2035,6 @@ components:
         name:
           type: string
           example: 'vovan1337'
-    
-    PostUsersSearch:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "Aboba"
     
     GetFriends:
       type: object
