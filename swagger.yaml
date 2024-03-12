@@ -242,6 +242,16 @@ paths:
           required: true
           schema:
             type: number
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
       tags:
         - places
       summary: Получение подробной информации о достопримечательности по ее идентификатору
@@ -458,12 +468,6 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /routes/route-points/status:
     patch:
@@ -495,7 +499,7 @@ paths:
           required: true
           schema:
             type: number
-        - name: pageIndex
+        - name: cursor
           in: query
           required: false
           schema:
@@ -617,12 +621,6 @@ paths:
                 $ref: '#/components/schemas/GetUsers'
         '401':
           description: Невалидный токен
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}:
     get:
@@ -648,12 +646,7 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
     patch:
       parameters:
         - name: userId
@@ -714,12 +707,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/avatar:
     patch:
@@ -815,12 +802,7 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
   /users/{userId}/routes/{routeId}:
     delete:
       parameters:
@@ -845,12 +827,10 @@ paths:
           description: Успешное удаление маршрута
         '401':
           description: Невалидный токен
-        '404':
-          description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
         '403':
           description: Недостаточно прав
+        '404':
+          description: В системе нет такого ресурса
   
   /users/{userId}/active-route:
     get:
@@ -876,12 +856,7 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
     put:
       parameters:
         - name: userId
@@ -947,12 +922,7 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
     post:
       parameters:
         - name: userId
@@ -1020,13 +990,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
-         
   
   /users/{userId}/achievements:
     get:
@@ -1052,12 +1015,6 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/chats:
     get:
@@ -1083,12 +1040,6 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends:
     get:
@@ -1119,12 +1070,6 @@ paths:
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends/{friendId}:
     delete:
@@ -1154,12 +1099,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /users/{userId}/friends/requests:
     get:
@@ -1188,12 +1127,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
           
   /friends/requests:
     post:
@@ -1277,12 +1210,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /rating:
     get:
@@ -1359,12 +1286,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /chats/{chatId}/members:
     post:
@@ -1434,12 +1355,6 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
   
   /chats/{chatId}/messages:
     get:
@@ -1473,12 +1388,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
     post:
       parameters:
         - name: chatId
@@ -1549,12 +1459,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
+
     post:
       parameters:
         - name: chatId
@@ -1793,6 +1698,12 @@ components:
           items:
             oneOf: 
               - $ref: '#/components/schemas/Comment' 
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: number
+              example: 1
               
     GetComment:
       type: object
