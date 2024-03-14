@@ -62,7 +62,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthInfo'
+              $ref: '#/components/schemas/RegisterInfo'
 
       responses:
         '201':
@@ -722,13 +722,20 @@ paths:
       description: Это действие доступно только владельцу аккаунта
       security:
        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
       responses:
         '200':
           description: Успешное получение данных
           content: 
               application/json:
                 schema: 
-                  $ref: '#/components/schemas/GetUserAvatar'
+                  $ref: '#/components/schemas/GetUser'
         '401':
           description: Невалидный токен
         '403':
@@ -1514,6 +1521,19 @@ components:
     AuthInfo:
       type: object
       properties:
+        email:
+          type: string
+          example: "pochta@gmail.com"
+        password:
+          type: string
+          example: "*******************"
+    
+    RegisterInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "user"
         email:
           type: string
           example: "pochta@gmail.com"
