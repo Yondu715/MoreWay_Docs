@@ -709,7 +709,7 @@ paths:
           description: В системе нет такого ресурса
   
   /users/{userId}/avatar:
-    patch:
+    put:
       parameters:
         - name: userId
           in: path
@@ -750,7 +750,7 @@ paths:
                 $ref: '#/components/schemas/Error422'
   
   /users/{userId}/password:
-    post:
+    put:
       parameters:
         - name: userId
           in: path
