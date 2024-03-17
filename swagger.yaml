@@ -275,7 +275,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/Error422'
           
-  /places/{placeId}/comments:
+  /places/{placeId}/reviews:
     get:
       parameters:
         - name: placeId
@@ -299,7 +299,7 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetComments'
+               $ref: '#/components/schemas/GetReviews'
         '401':
           description: Невалидный токен
         '403':
@@ -330,52 +330,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostComment'
+              $ref: '#/components/schemas/PostReview'
       responses:
         '201':
           description: Успешное добавление комментария
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetComment'
+               $ref: '#/components/schemas/GetReview'
         '401':
           description: Невалидный токен
-        '404':
-          description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
-          
-          
-  /places/{placeId}/rating:
-    put:
-      parameters:
-        - name: placeId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - places
-      summary: Добавление/изменение оценки пользователя для достопримечательности 
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutRating'
-      responses:
-        '201':
-          description: Рейтинг был успешно добавлен/изменен
-        '401':
-          description: Невалидный токен
-        '403':
-          description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
         '422':
@@ -491,7 +455,7 @@ paths:
         '403':
           description: Недостаточно прав
   
-  /routes/{routeId}/comments:
+  /routes/{routeId}/reviews:
     get:
       parameters:
         - name: routeId
@@ -515,7 +479,7 @@ paths:
           content: 
             application/json:
               schema: 
-               $ref: '#/components/schemas/GetComments'
+               $ref: '#/components/schemas/GetReviews'
         '401':
           description: Невалидный токен
         '404':
@@ -543,49 +507,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostComment'
+              $ref: '#/components/schemas/PostReview'
       responses:
         '201':
           description: Успешное добавление комментария
           content: 
             application/json:
               schema: 
-                $ref: '#/components/schemas/GetComment'
-        '401':
-          description: Невалидный токен
-        '403':
-          description: Недостаточно прав
-        '404':
-          description: В системе нет такого ресурса
-        '422':
-          description: Невалидные данные
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/Error422'
-  
-  /routes/{routeId}/rating:
-    put:
-      parameters:
-        - name: routeId
-          in: path
-          required: true
-          schema:
-            type: number
-      tags:
-        - routes
-      summary: Добавление/изменение оценки пользователя для маршрута 
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutRating'
-      responses:
-        '201':
-          description: Рейтинг был успешно добавлен/изменен
+                $ref: '#/components/schemas/GetReview'
         '401':
           description: Невалидный токен
         '403':
@@ -1683,15 +1612,18 @@ components:
               type: number
               example: 4.5
       
-    Comment:
+    Review:
       type: object
       properties:
         id: 
           type: integer
           example: 55
-        comment:
+        text:
           type: string
           example: "Крутое место"
+        rating:
+          type: number
+          example: 5
         createdAt:
           type: string
           example: "2023-10-01 11:16:54"
@@ -1700,24 +1632,27 @@ components:
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
     
-    PostComment:
+    PostReview:
       type: object
       properties:
         userId:
           type: number
           example: 1
-        comment:
+        text:
           type: string
           example: "Одно из прекраснейших мест города Кемерово..."
+        rating:
+          type: number
+          example: 5
             
-    GetComments:
+    GetReviews:
       type: object
       properties:
         data:
           type: array
           items:
             oneOf: 
-              - $ref: '#/components/schemas/Comment' 
+              - $ref: '#/components/schemas/Review' 
         meta:
           type: object
           properties:
@@ -1725,24 +1660,13 @@ components:
               type: number
               example: 1
               
-    GetComment:
+    GetReview:
       type: object
       properties:
         data:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/Comment'
-
-    PutRating:
-      type: object
-      properties:
-        userId:
-          type: number
-          example: 1
-        rating:
-          type: number
-          example: 4.5
-  
+            - $ref: '#/components/schemas/Review'
     
     ShortRoute:
       type: object
