@@ -1,0 +1,78 @@
+@startuml Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define MATERIAL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/material
+!include DEVICONS2/flutter.puml
+!include DEVICONS2/mysql.puml
+!include MATERIAL/map.puml
+
+'LAYOUT_WITH_LEGEND()'
+
+System_Boundary(frontend, "Frontend") {
+    Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
+    Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
+}
+
+System_Boundary(backend, "Backend") {
+    Component(AuthController, "AuthController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с аутентификацией")
+    Component(UserController, "UserController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с пользователями")
+    Component(PlaceController, "PlaceController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достопримечательностями")
+    Component(RouteController, "RouteController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с маршрутами")
+    Component(FriendController, "FriendController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с друзьями")
+    Component(RatingController, "RatingController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с рейтингом")
+    Component(ChatController, "ChatController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с чатами")
+    Component(AchievementController, "AchievementController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достижениями")
+
+    Component(AuthService, "AuthService", "Service", "Содержит бизнес логику связанную с аутентификацией")
+    Component(UserService, "UserService", "Service", "Содержит бизнес логику связанную с пользователями")
+    Component(PlaceService, "PlaceService", "Service", "Содержит бизнес логику связанную с достопримечательностями")
+    Component(RouteService, "RouteService", "Service", "Содержит бизнес логику связанную с маршрутами")
+    Component(FriendService, "FriendService", "Service", "Содержит бизнес логику связанную с друзьями")
+    Component(RatingService, "RatingService", "Service", "Содержит бизнес логику связанную с рейтингом")
+    Component(ChatService, "ChatService", "Service", "Содержит бизнес логику связанную с чатами")
+    Component(AchievementService, "AchievementService", "Service", "Содержит бизнес логику связанную с достижениями")
+
+    Component(UserModel, "UserModel", "Eloquent Model", "Реализует CRUD с пользователями")
+    Component(PlaceModel, "PlaceModel", "Eloquent Model", "Реализует CRUD с достопримечательностями")
+    Component(RouteModel, "RouteModel", "Eloquent Model", "Реализует CRUD с маршрутами")
+    Component(FriendModel, "FriendModel", "Eloquent Model", "Реализует CRUD с друзьями")
+    Component(ChatModel, "ChatModel", "Eloquent Model", "Реализует CRUD с чатами")
+    Component(AchievementModel, "AchievementModel", "Eloquent Model", "Реализует CRUD с достижениями")
+}
+
+ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
+
+Rel_D(frontend, backend, "Uses", "html/json, https")
+
+Rel_D(AuthController, AuthService, "Uses", "AuthDTO")
+Rel_D(AuthService, UserModel, "Uses", "AuthDTO")
+
+Rel_D(UserController, UserService, "Uses", "UserDTO")
+Rel_D(UserService, UserModel, "Uses", "UserDTO")
+
+Rel_D(PlaceController, PlaceService, "Uses", "PlaceDTO")
+Rel_D(PlaceService, PlaceModel, "Uses", "PlaceDTO")
+Rel_D(PlaceModel, db,"CRUD", "SQLRequest")
+
+Rel_D(RouteController, RouteService, "Uses", "RouteDTO")
+Rel_D(RouteService, RouteModel, "Uses", "RouteDTO")
+Rel_D(RouteModel, db,"CRUD", "SQLRequest")
+
+Rel_D(FriendController,FriendService, "Uses", "FriendDTO")
+Rel_D(FriendService, FriendModel, "Uses", "FriendDTO")
+Rel_D(FriendModel, db,"CRUD", "SQLRequest")
+
+Rel_D(RatingController, RatingService, "Uses", "RatingDTO")
+Rel_D(RatingService, UserModel, "Uses", "RatingDTO")
+Rel_D(UserModel, db,"CRUD", "SQLRequest")
+
+Rel_D(ChatController, ChatService, "Uses", "ChatDTO")
+Rel_D(ChatService, ChatModel, "Uses", "ChatDTO")
+Rel_D(ChatModel, db,"CRUD", "SQLRequest")
+
+Rel_D(AchievementController, AchievementService, "Uses", "AchievementDTO")
+Rel_D(AchievementService, AchievementModel, "Uses", "AchievementDTO")
+Rel_D(AchievementModel, db,"CRUD", "SQLRequest")
+@enduml
