@@ -1,0 +1,21 @@
+meta {
+  name: get places locality
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://more-way.ru/api/v1/places?lat=56.73&lon=43.2247&locality=Белово,Кемерово
+  body: none
+  auth: bearer
+}
+
+query {
+  lat: 56.73
+  lon: 43.2247
+  locality: Белово,Кемерово
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21vcmUtd2F5LnJ1L2FwaS92MS9hdXRoL2xvZ2luIiwiaWF0IjoxNzExNTIxOTQ1LCJleHAiOjE3MTE2MDgzNDUsIm5iZiI6MTcxMTUyMTk0NSwianRpIjoiZ2ZRTTZZUlVCclM5TDBYdCIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.WMTFDf5Gg3ujMtjoUYfBFhBr82mvmKUIVCXYlA-DEio
+}

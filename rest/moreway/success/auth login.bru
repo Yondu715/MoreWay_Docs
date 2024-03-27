@@ -1,0 +1,18 @@
+meta {
+  name: auth login
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://more-way.ru/api/v1/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "test@test.test",
+    "password": "12345678"
+  }
+}
