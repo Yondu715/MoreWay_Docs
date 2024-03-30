@@ -121,6 +121,7 @@ paths:
         '401':
           description: Невалидный токен
   
+<<<<<<< HEAD
   /auth/password/forgot:
     post:
       tags:
@@ -149,12 +150,22 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/VerifyCodeResetPassword'
+=======
+  /auth/refresh-token:
+    post:
+      tags:
+        - auth
+      summary: Обновление токена
+      security:
+        - bearerAuth: []
+>>>>>>> 2555974fb6e2a3b287f72b42a3eee86b3995fb0d
       responses:
         '200':
           description: Успешное получение данных
           content: 
             application/json:
               schema: 
+<<<<<<< HEAD
                $ref: '#/components/schemas/ValidateResetPasswordCode'
         '404':
           description: Пользователь не найден
@@ -175,6 +186,11 @@ paths:
           description: Успешное получение данных
         '404':
           description: Пользователь не найден
+=======
+               $ref: '#/components/schemas/GetAccessToken'
+        '401':
+          description: Невалидный токен
+>>>>>>> 2555974fb6e2a3b287f72b42a3eee86b3995fb0d
   
   /places:
     get:
@@ -208,6 +224,7 @@ paths:
           required: false
           schema:
             type: string
+<<<<<<< HEAD
             example: [1, -1]
         - name: search
           in: query
@@ -239,6 +256,13 @@ paths:
           schema:
             type: string
             example: 1-5
+=======
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+>>>>>>> 2555974fb6e2a3b287f72b42a3eee86b3995fb0d
       tags:
         - places
       summary: Получение списка всех достопримечательностей
@@ -274,6 +298,43 @@ paths:
             type: number
       tags:
         - places
+<<<<<<< HEAD
+=======
+      summary: Получение списка ближайших к пользователю достопримечательностей
+      security:
+        - bearerAuth: [] 
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+               $ref: '#/components/schemas/GetPlaces'
+        '401':
+          description: Невалидный токен
+      
+          
+  /places/{placeId}:
+    get:
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+      tags:
+        - places
+>>>>>>> 2555974fb6e2a3b287f72b42a3eee86b3995fb0d
       summary: Получение подробной информации о достопримечательности по ее идентификатору
       security:
         - bearerAuth: []

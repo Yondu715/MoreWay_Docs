@@ -1,0 +1,83 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Component diagram for Mobile application 
+
+Container_Boundary(app, "Mobile app"){
+
+    Container_Boundary(core, "Core"){
+        Component(apiService, "API Service", "Dio", "Http-клиент")
+        Component(diContainer, "DI Container", "GetIt", "Внедрение зависимостей")
+        Component(secureStorage, "Secure storage", "FlutterSecureStorage", "Локальное хранилище с поддержкой шифрования")
+        Component(router, "Navigation router", "Go Router", "Роутер для навигации между страницами")
+    }
+
+    Container_Boundary(auth, "Authorization module"){
+        Component(signInPage, "Sign in page", "Flutter Widget", "Страница авторизации")
+        Component(signUpPage, "Sign up page", "Flutter Widget", "Страница регистрации")
+        Component(authState, "Authorization state", "BloC", "Управление состоянием и логикой авторизации")
+        Component(signInUseCase, "Sign in usecase", "Dart class", "Бизнес-логика авторизации")
+        Component(signUpUseCase, "Sign up usecase", "Dart class", "Бизнес-логика регистрации")
+        Component(signOutUseCase, "Sign out usecase", "Dart class", "Бизнес-логика выхода из аккаунта")
+        Component(checkAuthStatusUseCase, "Check authorization status usecase", "Dart class", "Бизнес-логика проверки статуса авторизации")
+        Component(authServiceAPI, "Authorization service API", "API Service", "Сервис для отправки запросов /auth")
+        Component(authTokenStorage, "Token storage", "Token repository", "Репозиторий для хранения токена авторизации")
+        Rel(signInPage, authState, "")
+        Rel(signUpPage, authState, "")
+        Rel(authState, signOutUseCase, "")
+        Rel(authState, signInUseCase, "")
+        Rel(authState, signUpUseCase, "")
+        Rel(authState, checkAuthStatusUseCase, "")
+        Rel(signInUseCase, authServiceAPI, "")
+        Rel(signInUseCase, authTokenStorage, "")
+        Rel(signUpUseCase, authServiceAPI, "")
+        Rel(signUpUseCase, authTokenStorage, "")
+        Rel(signOutUseCase, authServiceAPI, "")
+        Rel(signOutUseCase, authTokenStorage, "")
+        Rel(checkAuthStatusUseCase, authTokenStorage, "")
+    }
+    
+    Rel_D(authServiceAPI, apiService, "")
+    Rel_D(authTokenStorage, secureStorage, "")
+    Rel_D(router, authState, "")
+
+    Container_Boundary(routeBuilder, "Route builder module"){
+        ' Component(homePage, "Home page", "Flutter Widget", "Главная страница с достопримечательностями и маршрутами")
+        ' Component(searchPage, "Search page", "Flutter Widget", "Страница поиска достопримечательностей и маршрутов с фильтрами")
+        ' Component(placeDetailPage, "Place detail page", "Flutter Widget", "Страница подробного просмотра достопримечательности")
+        ' Component(routeDetailPage, "Route detail page", "Flutter Widget", "Страница подробного просмотра маршрута")
+
+        ' Component(getPlacesUseCase, "Get places usecase", "Dart class", "Получение списка достопримечательностей")
+        ' Component(getRoutesUseCase, "Get routes usecase", "Dart class", "Получение списка маршрутов") 
+        ' Component(getPlaceDetailUseCase, "Get place detail usecase", "Dart class", "Получение детальной информации о достопримечательности")
+        Component(builderRoutePage, "Builder route page", "Flutter Widget", "Страница конструктора маршрута")
+        Component(stateBuilderRoutePage, "Builder route state", "BloC", "Управление состоянием и логикой конструктура маршрутов")
+        Component(addPlaceInRouteUseCase, "Add place in route usecase", "Dart class", "Бизнес-логика добавления достопримечательности в конструктор")
+        Component(deletePlaceInRouteUseCase, "Delete place in route usecase", "Dart class", "Бизнес-логика удаления достопримечательности из конструктора")
+        Component(rearrangePlacesInRouteUseCase, "Rearrenge places in route usecase", "Dart class", "Бизнес-логика изменения порядка достопримечательностей в конструкторе")
+        Component(buildRouteUseCase, "Build route usecase", "Dart class", "Бизнес-логика создания маршрута из данных конструктора")
+        Component(resetRouteUseCase, "Reset route builder usecase", "Dart class", "Бизнес-логика сброса состояния конструктора")
+        Component(getRouteInBuilderUseCase, "Get route in builder usecase", "Dart class", "Бизнес-логика получения текущего маршрута в конструкторе")
+        Component(builderRepository, "Builder repository", "SQLite", "Хранилище для данных конструктора")
+        Component(routeBuilderServiceAPI, "Route builder service API", "API Service", "Сервис для создания маршрута")
+        Rel(builderRoutePage, stateBuilderRoutePage, "")
+        Rel(stateBuilderRoutePage, addPlaceInRouteUseCase, "")
+        Rel(stateBuilderRoutePage, deletePlaceInRouteUseCase, "")
+        Rel(stateBuilderRoutePage, rearrangePlacesInRouteUseCase, "")
+        Rel(stateBuilderRoutePage, buildRouteUseCase, "")
+        Rel(stateBuilderRoutePage, resetRouteUseCase, "")
+        Rel(stateBuilderRoutePage, getRouteInBuilderUseCase, "")
+        Rel(addPlaceInRouteUseCase, builderRepository, "")
+        Rel(deletePlaceInRouteUseCase, builderRepository, "")
+        Rel(rearrangePlacesInRouteUseCase, builderRepository, "")
+        Rel(resetRouteUseCase, builderRepository, "")
+        Rel(getRouteInBuilderUseCase, builderRepository, "")
+        Rel(buildRouteUseCase, routeBuilderServiceAPI, "")
+        Rel(buildRouteUseCase, builderRepository, "")
+    }
+
+    Rel_D(routeBuilderServiceAPI, apiService, "")
+}
+@enduml

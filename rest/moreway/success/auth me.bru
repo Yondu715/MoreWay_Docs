@@ -1,0 +1,22 @@
+meta {
+  name: auth me
+  type: http
+  seq: 10
+}
+
+get {
+  url: https://more-way.ru/api/v1/auth/me
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21vcmUtd2F5LnJ1L2FwaS92MS9hdXRoL2xvZ2luIiwiaWF0IjoxNzExNTI3NTUyLCJleHAiOjE3MTE2MTM5NTIsIm5iZiI6MTcxMTUyNzU1MiwianRpIjoiNUpXMVlHN0VKQmJocjVqcSIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.KhXtL4S_bC8tW75hNgbFNrxbCKvPwRs_m-N_2USGzVE
+}
+
+body:json {
+  {
+    "email": "test@test.test",
+    "password": "12345678"
+  }
+}
