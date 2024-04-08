@@ -825,7 +825,7 @@ paths:
         '404':
           description: В системе нет такого ресурса
 
-    put:
+    patch:
       parameters:
         - name: userId
           in: path
@@ -1779,9 +1779,6 @@ components:
               index:
                 type: number
                 example: 1
-              isCompleted:
-                type: boolean
-                example: false
               place:
                 type: object
                 oneOf:
@@ -1821,7 +1818,7 @@ components:
         name:
           type: string
           example: "Супер маршрут по лесу"
-        creatorId:
+        userId:
           type: number
           example: 1
         routePoints:
