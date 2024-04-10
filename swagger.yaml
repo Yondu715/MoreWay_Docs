@@ -1980,16 +1980,26 @@ components:
         data:
           type: array
           items:
-            oneOf:
-              - $ref: '#/components/schemas/ShortUser'
+            properties:
+              id:
+                type: number
+                example: 1
+              user:
+                oneOf:
+                  - $ref: '#/components/schemas/ShortUser'
     
     GetFriendsRequest:
       type: object
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: '#/components/schemas/ShortUser'
+          properties:
+            id:
+              type: number
+              example: 1
+            user:
+              oneOf:
+                - $ref: '#/components/schemas/ShortUser'
     
     PostFriendsRequest:
       type: object
