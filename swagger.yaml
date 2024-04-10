@@ -322,25 +322,13 @@ paths:
                       localities:
                         type: array
                         items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                              example: 11
-                            name:
-                              type: string
-                              example: "Кемерово"
+                          type: string
+                          example: Кемерово
                       types:
                         type: array
                         items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                              example: 11
-                            name:
-                              type: string
-                              example: "Парк"
+                          type: string
+                          example: Парк
                       minDistance:
                         type: integer
                         example: 1
