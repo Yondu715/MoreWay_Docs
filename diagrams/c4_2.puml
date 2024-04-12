@@ -18,7 +18,7 @@ System_Boundary(frontend, "Frontend") {
     Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
     Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
 }
-System_Ext(googleMaps, "Google Maps API", "Интерфейс для работы с картами при помощи Google Maps SDK", $sprite="map")
+System_Ext(openStreetMaps, "OpenStreetMaps API", "Интерфейс для работы с картами при помощи OSM SDK", $sprite="map")
 
 System_Boundary(backend, "Backend") {
     Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
@@ -31,6 +31,6 @@ Rel(moderator, webApp, "Uses", "web app")
 Rel(mobileApp, api, "Uses", "https/json, wss")
 Rel(webApp, api, "Uses", "https/json, html")
 Rel_R(api, db, "Reads/Writes", "CRUD")
-Rel_L(mobileApp, googleMaps, "Uses", "https/json")
+Rel_L(mobileApp, openStreetMaps, "Uses", "https/json")
 
 @enduml
