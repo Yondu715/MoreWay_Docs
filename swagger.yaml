@@ -784,6 +784,105 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error422'
+
+  /users/{userId}/constructor:
+    put:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Создание или изменение конструктора маршрута пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          example: 1
+                        place:
+                          type: integer
+                          example: 3
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            index:
+                              type: integer
+                              example: 1
+                            place:
+                              schema: 
+                              $ref: '#/components/schemas/ShortPlace'
+        '401':
+          description: Невалидный токен
+  
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+      tags:
+        - routes
+      summary: Получение конструктора маршрута пользователя
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content: 
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            index:
+                              type: integer
+                              example: 1
+                            place:
+                              schema: 
+                              $ref: '#/components/schemas/ShortPlace'
+        '401':
+          description: Невалидный токен
          
   /users/{userId}/routes:
     get:
