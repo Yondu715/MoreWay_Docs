@@ -46,11 +46,11 @@ paths:
           description: Неправильный пароль или почта
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-               
+
   /auth/register:
     post:
       tags:
@@ -69,11 +69,11 @@ paths:
           description: Успешная регистрация
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-                
+
   /auth/refresh-token:
     post:
       tags:
@@ -82,13 +82,13 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetAccessToken'
+              schema:
+                $ref: '#/components/schemas/GetAccessToken'
         '401':
           description: Невалидный токен
-  
+
   /auth/logout:
     post:
       tags:
@@ -102,7 +102,7 @@ paths:
           description: Успешный выход из системы
         '401':
           description: Невалидный токен
-  
+
   /auth/me:
     get:
       tags:
@@ -114,13 +114,13 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetAuthUser'
+              schema:
+                $ref: '#/components/schemas/GetAuthUser'
         '401':
           description: Невалидный токен
-  
+
   /auth/password/forgot:
     post:
       tags:
@@ -137,7 +137,7 @@ paths:
           description: Успешное получение данных
         '404':
           description: Пользователь не найден
-          
+
   /auth/password/verify-code:
     post:
       tags:
@@ -152,13 +152,13 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/ValidateResetPasswordCode'
+              schema:
+                $ref: '#/components/schemas/ValidateResetPasswordCode'
         '404':
           description: Пользователь не найден
-          
+
   /auth/password/reset:
     put:
       tags:
@@ -175,7 +175,7 @@ paths:
           description: Успешное получение данных
         '404':
           description: Пользователь не найден
-  
+
   /places:
     get:
       parameters:
@@ -199,7 +199,7 @@ paths:
             example: eyJwbGFjZXMuaWQiOjMsIl
         - name: limit
           in: query
-          required: true
+          required: false
           schema:
             type: number
             example: 10
@@ -249,17 +249,17 @@ paths:
         - places
       summary: Получение списка всех достопримечательностей
       security:
-        - bearerAuth: [] 
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetPlaces'
+              schema:
+                $ref: '#/components/schemas/GetPlaces'
         '401':
           description: Невалидный токен
-          
+
   /places/{placeId}:
     get:
       parameters:
@@ -286,21 +286,21 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetPlace'
+              schema:
+                $ref: '#/components/schemas/GetPlace'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-                
+
   /places/filters:
     get:
       tags:
@@ -311,7 +311,7 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
               schema:
                 type: object
@@ -339,7 +339,7 @@ paths:
           description: Невалидный токен
         '404':
           description: Ошибка в получении фильтров
-          
+
   /places/{placeId}/reviews:
     get:
       parameters:
@@ -367,10 +367,10 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetReviews'
+              schema:
+                $ref: '#/components/schemas/GetReviews'
         '401':
           description: Невалидный токен
         '403':
@@ -379,9 +379,9 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
 
     post:
@@ -405,21 +405,21 @@ paths:
       responses:
         '201':
           description: Успешное добавление комментария
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetReview'
+              schema:
+                $ref: '#/components/schemas/GetReview'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-          
+
   /routes:
     get:
       parameters:
@@ -427,22 +427,50 @@ paths:
           in: query
           required: false
           schema:
-            type: number
-        - name: sort
-          in: query
-          required: false
-          schema:
             type: string
-        - name: filter
-          in: query
-          required: false
-          schema:
-            type: string
+            example: eyJwbGFjZXMuaWQiOjMsIl
         - name: limit
           in: query
           required: false
           schema:
             type: number
+            example: 10
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            example: [points, passing, comments, rating, time]
+        - name: sortType
+          in: query
+          required: false
+          schema:
+            type: string
+            example: [1, -1]
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: маршру
+        - name: point
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 2-15
+        - name: passing
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 0-1000
+        - name: rating
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 1-5
       tags:
         - routes
       summary: Получение списка всех маршрутов
@@ -451,16 +479,16 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetRoutes'
+              schema:
+                $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
     post:
       tags:
         - routes
-      summary: Создание маршрута 
+      summary: Создание маршрута
       security:
         - bearerAuth: []
       requestBody:
@@ -478,7 +506,7 @@ paths:
                 $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
-  
+
   /routes/{routeId}:
     get:
       parameters:
@@ -495,17 +523,52 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetRoute'
+              schema:
+                $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-  
+
+  /routes/filters:
+    get:
+      tags:
+        - routes
+      summary: Получение фильтров для маршрутов
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      minPassing:
+                        type: integer
+                        example: 0
+                      maxPassing:
+                        type: integer
+                        example: 1000
+                      minPoint:
+                        type: integer
+                        example: 2
+                      maxPoint:
+                        type: integer
+                        example: 20
+        '401':
+          description: Невалидный токен
+        '404':
+          description: Ошибка в получении фильтров
+
   /routes/route-points/status:
-    patch:
+    put:
       tags:
         - routes
       summary: Пометить этап маршрута пройденным
@@ -515,17 +578,17 @@ paths:
       requestBody:
         required: true
         content:
-         application/json:
-           schema:
-             $ref: '#/components/schemas/PatchRoutePointStatus'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchRoutePointStatus'
       responses:
         '200':
-          description: Успешное прохождение этапа 
+          description: Успешное прохождение этапа
         '401':
           description: Невалидный токен
         '403':
           description: Недостаточно прав
-  
+
   /routes/{routeId}/reviews:
     get:
       parameters:
@@ -539,6 +602,11 @@ paths:
           required: false
           schema:
             type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
       tags:
         - routes
       summary: Получение списка комментариев к маршруту
@@ -547,19 +615,19 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
-               $ref: '#/components/schemas/GetReviews'
+              schema:
+                $ref: '#/components/schemas/GetReviews'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
     post:
       parameters:
@@ -582,9 +650,9 @@ paths:
       responses:
         '201':
           description: Успешное добавление комментария
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetReview'
         '401':
           description: Невалидный токен
@@ -594,9 +662,9 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
 
   /users:
@@ -611,17 +679,17 @@ paths:
         - users
       summary: Поиск пользователей
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetUsers'
         '401':
           description: Невалидный токен
-  
+
   /users/{userId}:
     get:
       parameters:
@@ -632,15 +700,15 @@ paths:
             type: number
       tags:
         - users
-      summary: Получение полной информации о пользователе по его идентификатору 
+      summary: Получение полной информации о пользователе по его идентификатору
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetUser'
         '401':
           description: Невалидный токен
@@ -656,10 +724,10 @@ paths:
             type: number
       tags:
         - users
-      summary: Изменение данных пользователя 
+      summary: Изменение данных пользователя
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -669,9 +737,9 @@ paths:
       responses:
         '200':
           description: Успешное изменение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetUser'
         '401':
           description: Невалидный токен
@@ -681,9 +749,9 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
     delete:
       parameters:
@@ -694,10 +762,10 @@ paths:
             type: number
       tags:
         - users
-      summary: Удаление аккаунта пользователя 
+      summary: Удаление аккаунта пользователя
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '204':
           description: Успешное удаление аккаунта
@@ -707,7 +775,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/avatar:
     put:
       parameters:
@@ -721,7 +789,7 @@ paths:
       summary: Обновление аватара пользователя
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -732,10 +800,10 @@ paths:
       responses:
         '200':
           description: Успешное получение данных
-          content: 
-              application/json:
-                schema: 
-                  $ref: '#/components/schemas/GetUser'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
         '401':
           description: Невалидный токен
         '403':
@@ -744,11 +812,11 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-  
+
   /users/{userId}/password:
     put:
       parameters:
@@ -762,7 +830,7 @@ paths:
       summary: Изменение пароля пользователя
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -780,9 +848,9 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
 
   /users/{userId}/constructor:
@@ -801,27 +869,27 @@ paths:
         content:
           application/json:
             schema:
-                type: object
-                properties:
+              type: object
+              properties:
+                routePoints:
+                  type: array
                   items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        index:
-                          type: integer
-                          example: 1
-                        place:
-                          type: integer
-                          example: 3
+                    type: object
+                    properties:
+                      index:
+                        type: integer
+                        example: 1
+                      placeId:
+                        type: integer
+                        example: 3
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   data:
@@ -830,7 +898,7 @@ paths:
                       id:
                         type: integer
                         example: 2
-                      items:
+                      routePoints:
                         type: array
                         items:
                           type: object
@@ -839,11 +907,10 @@ paths:
                               type: integer
                               example: 1
                             place:
-                              schema: 
                               $ref: '#/components/schemas/ShortPlace'
         '401':
           description: Невалидный токен
-  
+
     get:
       parameters:
         - name: userId
@@ -855,13 +922,13 @@ paths:
         - routes
       summary: Получение конструктора маршрута пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   data:
@@ -879,11 +946,10 @@ paths:
                               type: integer
                               example: 1
                             place:
-                              schema: 
                               $ref: '#/components/schemas/ShortPlace'
         '401':
           description: Невалидный токен
-         
+
   /users/{userId}/routes:
     get:
       parameters:
@@ -892,17 +958,27 @@ paths:
           required: true
           schema:
             type: number
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
       tags:
         - routes
-      summary: Получение списка маршрутов, созданных пользователем 
+      summary: Получение списка маршрутов, созданных пользователем
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
@@ -937,7 +1013,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/active-route:
     get:
       parameters:
@@ -948,15 +1024,15 @@ paths:
             type: number
       tags:
         - routes
-      summary: Получение активного маршрута пользователя 
+      summary: Получение активного маршрута пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
@@ -972,9 +1048,9 @@ paths:
             type: number
       tags:
         - routes
-      summary: Изменение активного маршрута пользователя 
+      summary: Изменение активного маршрута пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -984,9 +1060,9 @@ paths:
       responses:
         '200':
           description: Успешное изменение активного маршрута
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetRoute'
         '401':
           description: Невалидный токен
@@ -994,11 +1070,11 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-        
+
   /users/{userId}/favorite-routes:
     get:
       parameters:
@@ -1012,17 +1088,22 @@ paths:
           required: false
           schema:
             type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
       tags:
         - routes
-      summary: Получение избранных маршрутов пользователя 
+      summary: Получение избранных маршрутов пользователя
       security:
         - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetRoutes'
         '401':
           description: Невалидный токен
@@ -1037,11 +1118,11 @@ paths:
           schema:
             type: number
       tags:
-       - routes
-      summary: Добавление маршрута в категорию "Избранное" 
+        - routes
+      summary: Добавление маршрута в категорию "Избранное"
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1063,11 +1144,11 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-  
+
   /users/{userId}/favorite-routes/{routeId}:
     delete:
       parameters:
@@ -1083,7 +1164,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Удаление маршрута из категории "Избранное" 
+      summary: Удаление маршрута из категории "Избранное"
       description: Это действие доступно только владельцу аккаунта
       security:
         - bearerAuth: []
@@ -1096,7 +1177,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/achievements:
     get:
       parameters:
@@ -1107,21 +1188,21 @@ paths:
             type: number
       tags:
         - achievements
-      summary: Получение списка достижений пользователя 
+      summary: Получение списка достижений пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetUserAchievements'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/chats:
     get:
       parameters:
@@ -1132,21 +1213,21 @@ paths:
             type: number
       tags:
         - chats
-      summary: Получение списка чатов пользователя 
+      summary: Получение списка чатов пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetChats'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/friends:
     get:
       parameters:
@@ -1162,21 +1243,21 @@ paths:
             type: number
       tags:
         - friends
-      summary: Получение списка друзей пользователя 
+      summary: Получение списка друзей пользователя
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetFriends'
         '401':
           description: Невалидный токен
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/friends/{friendId}:
     delete:
       parameters:
@@ -1192,10 +1273,10 @@ paths:
             type: number
       tags:
         - friends
-      summary: Удаление пользователя из списка друзей 
+      summary: Удаление пользователя из списка друзей
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '204':
           description: Успешное удаление данных
@@ -1205,7 +1286,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /users/{userId}/friends/requests:
     get:
       parameters:
@@ -1219,13 +1300,13 @@ paths:
       summary: Получение списка запросов в друзья от других пользователей
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '201':
           description: Успешное получение данных
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/GetFriendsRequests'
         '401':
           description: Невалидный токен
@@ -1233,7 +1314,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-          
+
   /friends/requests:
     post:
       tags:
@@ -1241,7 +1322,7 @@ paths:
       summary: Создание запроса на добавление в друзья
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1261,9 +1342,9 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
     put:
       tags:
@@ -1271,7 +1352,7 @@ paths:
       summary: Принятие запроса на добавление в друзья
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1281,18 +1362,18 @@ paths:
       responses:
         '204':
           description: Успешное принятие запроса
-          
+
         '401':
           description: Невалидный токен
         '403':
           description: Недостаточно прав
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-  
+
   /friends/requests/{requestId}:
     delete:
       parameters:
@@ -1306,7 +1387,7 @@ paths:
       summary: Отклонение запроса на добавление в друзья
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '204':
           description: Успешное отклонение запроса
@@ -1316,7 +1397,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /rating:
     get:
       tags:
@@ -1324,7 +1405,7 @@ paths:
       summary: Получение рейтинга пользователей
       description: Это действие доступно только владельцу аккаунта
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
@@ -1334,14 +1415,14 @@ paths:
                 $ref: '#/components/schemas/GetRating'
         '401':
           description: Невалидный токен
-  
+
   /chats:
     post:
       tags:
         - chats
       summary: Создание чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -1360,11 +1441,11 @@ paths:
           description: Недостаточно прав
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-    
+
   /chats/{chatId}:
     get:
       parameters:
@@ -1378,7 +1459,7 @@ paths:
       summary: Получение полной информации о чате
       description: Это действие доступно только пользователю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
@@ -1392,7 +1473,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /chats/{chatId}/members:
     post:
       parameters:
@@ -1406,7 +1487,7 @@ paths:
       summary: Добавление пользователей в чат
       description: Это действие доступно только создателю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -1418,7 +1499,7 @@ paths:
           content:
             application/json:
               schema:
-               $ref: '#/components/schemas/GetChat'
+                $ref: '#/components/schemas/GetChat'
         '401':
           description: Невалидный токен
         '403':
@@ -1427,12 +1508,12 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-  
-  
+
+
   /chats/{chatId}/members/{memberId}:
     delete:
       parameters:
@@ -1448,10 +1529,10 @@ paths:
             type: number
       tags:
         - chats
-      summary: Удаление пользователя из чата 
+      summary: Удаление пользователя из чата
       description: Это действие доступно только создателю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '204':
           description: Успешное удаление пользователя из чата
@@ -1461,7 +1542,7 @@ paths:
           description: Недостаточно прав
         '404':
           description: В системе нет такого ресурса
-  
+
   /chats/{chatId}/messages:
     get:
       parameters:
@@ -1480,7 +1561,7 @@ paths:
       summary: Получение списка сообщений чата
       description: Это действие доступно только пользователю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
@@ -1507,7 +1588,7 @@ paths:
       summary: Добавление сообщение в чат
       description: Это действие доступно только пользователю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -1528,11 +1609,11 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
-          
+
   /chats/{chatId}/activity:
     get:
       parameters:
@@ -1551,7 +1632,7 @@ paths:
       summary: Получение выбранного в чате маршрута
       description: Это действие доступно только пользователю чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       responses:
         '200':
           description: Успешное получение данных
@@ -1583,7 +1664,7 @@ paths:
       summary: Изменение выбранного в чате маршрута
       description: Это действие доступно только владельцу чата
       security:
-       - bearerAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -1604,14 +1685,14 @@ paths:
           description: В системе нет такого ресурса
         '422':
           description: Невалидные данные
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Error422'
 
 components:
   securitySchemes:
-    bearerAuth:           
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -1626,7 +1707,7 @@ components:
         password:
           type: string
           example: "*******************"
-    
+
     RegisterInfo:
       type: object
       properties:
@@ -1639,11 +1720,11 @@ components:
         password:
           type: string
           example: "*******************"
-          
+
     Error422:
       type: object
       properties:
-        errors: 
+        errors:
           type: object
           properties:
             field1:
@@ -1652,61 +1733,61 @@ components:
             field2:
               type: string
               example: "Поле field2 должно быть строкой"
-    
+
     GetAccessToken:
       type: object
       properties:
         data:
           type: object
           properties:
-            accessToken: 
+            accessToken:
               type: string
               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-              
+
     EmailUser:
       type: object
       properties:
-        email: 
+        email:
           type: string
           example: "test@test.test"
-          
+
     VerifyCodeResetPassword:
       type: object
       properties:
-        email: 
+        email:
           type: string
           example: "test@test.test"
-        code: 
+        code:
           type: string
           example: "1234"
-    
+
     ResetPassword:
       type: object
       properties:
-        email: 
+        email:
           type: string
           example: "test@test.test"
-        token: 
+        token:
           type: string
           example: "$2y$12$vgjvczwiL6.N/gzk7PHI/uaRfL.3RHbPrmYuqaRb1Ut6iOTsKZ0hK"
         password:
           type: string
           example: "123123123"
-              
+
     ValidateResetPasswordCode:
       type: object
       properties:
         data:
           type: object
           properties:
-            resetPasswordToken: 
+            resetPasswordToken:
               type: string
               example: "$2y$12$vgjvczwiL6.N/gzk7PHI/uaRfL.3RHbPrmYuqaRb1Ut6iOTsKZ0hK"
-              
+
     ShortPlace:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 12
         name:
@@ -1751,7 +1832,7 @@ components:
     FullPlace:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 12
         name:
@@ -1798,7 +1879,7 @@ components:
             name:
               type: string
               example: "Парк"
-    
+
     VeryShortPlace:
       type: object
       properties:
@@ -1808,7 +1889,7 @@ components:
         image:
           type: string
           example: "images/aboba.production.jpeg"
-  
+
     GetPlaces:
       type: object
       properties:
@@ -1827,7 +1908,7 @@ components:
             cursor:
               type: number
               example: 1
-            
+
     GetPlace:
       type: object
       properties:
@@ -1839,11 +1920,11 @@ components:
             distance:
               type: number
               example: 4.5
-      
+
     Review:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 55
         text:
@@ -1859,7 +1940,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-    
+
     PostReview:
       type: object
       properties:
@@ -1872,22 +1953,22 @@ components:
         rating:
           type: number
           example: 5
-            
+
     GetReviews:
       type: object
       properties:
         data:
           type: array
           items:
-            oneOf: 
-              - $ref: '#/components/schemas/Review' 
+            oneOf:
+              - $ref: '#/components/schemas/Review'
         meta:
           type: object
           properties:
             cursor:
               type: number
               example: 1
-              
+
     GetReview:
       type: object
       properties:
@@ -1895,35 +1976,47 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/Review'
-    
+
     ShortRoute:
       type: object
       properties:
-        id: 
+        id:
           type: number
           example: 5
         name:
           type: string
           example: "Супер маршрут по лесу"
+        points:
+          type: integer
+          example: 5
+        rating:
+          type: number
+          example: 3.4
         routePoints:
           type: array
           items:
             oneOf:
               - $ref: '#/components/schemas/VeryShortPlace'
-        creator: 
+        creator:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-            
+
     FullRoute:
       type: object
       properties:
-        id: 
+        id:
           type: number
           example: 5
         name:
           type: string
           example: "Супер маршрут по лесу"
+        points:
+          type: integer
+          example: 5
+        rating:
+          type: number
+          example: 3.4
         routePoints:
           type: array
           items:
@@ -1939,11 +2032,11 @@ components:
                 type: object
                 oneOf:
                   - $ref: '#/components/schemas/ShortPlace'
-        creator: 
+        creator:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-  
+
     GetRoutes:
       type: object
       properties:
@@ -1959,7 +2052,7 @@ components:
             cursor:
               type: number
               example: 1
-    
+
     GetRoute:
       type: object
       properties:
@@ -1967,7 +2060,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/FullRoute'
-            
+
     PostRoute:
       type: object
       properties:
@@ -1977,45 +2070,31 @@ components:
         userId:
           type: number
           example: 1
-        routePoints:
-          type: array
-          items:
-            type: object
-            properties:
-              index:
-                type: number
-                example: 2
-              placeId:
-                type: number
-                example: 2
-    
+
     PostFavoriteRoute:
       type: object
       properties:
         routeId:
           type: number
           example: 1
-    
+
     PutActiveRoute:
       type: object
       properties:
         routeId:
           type: number
           example: 1
-    
+
     PatchRoutePointStatus:
       type: object
       properties:
         userId:
           type: number
           example: 1
-        routeId:
-          type: number
-          example: 1
         routePointId:
           type: number
           example: 1
-    
+
     ShortUser:
       type: object
       properties:
@@ -2042,15 +2121,15 @@ components:
         avatar:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/UserAvatar' 
+            - $ref: '#/components/schemas/UserAvatar'
         score:
           type: integer
           example: 50
-    
+
     UserAvatar:
       type: string
       example: 'images/avatar1.jpeg'
-    
+
     GetUserAvatar:
       type: object
       properties:
@@ -2058,7 +2137,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/UserAvatar'
-            
+
     PostUserPassword:
       type: object
       properties:
@@ -2068,7 +2147,7 @@ components:
         newPassword:
           type: string
           example: 'newPassword'
-    
+
     FullUser:
       type: object
       properties:
@@ -2088,7 +2167,7 @@ components:
         password:
           type: string
           example: 'abober'
-    
+
     GetAuthUser:
       type: object
       properties:
@@ -2097,7 +2176,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/FullUser'
 
-    
+
     GetUser:
       type: object
       properties:
@@ -2105,7 +2184,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/User'
-    
+
     GetUsers:
       type: object
       properties:
@@ -2113,14 +2192,14 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/User'
-    
+
     PatchUser:
       type: object
       properties:
         name:
           type: string
           example: 'vovan1337'
-    
+
     GetFriends:
       type: object
       properties:
@@ -2129,7 +2208,7 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/User'
-    
+
     GetFriendsRequests:
       type: object
       properties:
@@ -2143,7 +2222,7 @@ components:
               user:
                 oneOf:
                   - $ref: '#/components/schemas/ShortUser'
-    
+
     GetFriendsRequest:
       type: object
       properties:
@@ -2156,7 +2235,7 @@ components:
             user:
               oneOf:
                 - $ref: '#/components/schemas/ShortUser'
-    
+
     PostFriendsRequest:
       type: object
       properties:
@@ -2166,14 +2245,14 @@ components:
         friendId:
           type: number
           example: 1
-    
+
     PutFriendsRequest:
       type: object
       properties:
         requestId:
           type: number
           example: 1
-    
+
     Achievement:
       type: object
       properties:
@@ -2204,7 +2283,7 @@ components:
         image:
           type: string
           example: '/images/achievement.jpeg'
-    
+
     GetUserAchievements:
       type: object
       properties:
@@ -2217,7 +2296,7 @@ components:
               currentProgress:
                 type: number
                 example: 0
-    
+
     GetRating:
       type: object
       properties:
@@ -2232,11 +2311,11 @@ components:
               place:
                 type: number
                 example: 1
-    
+
     Message:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 55
         message:
