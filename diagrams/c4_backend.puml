@@ -16,63 +16,128 @@ System_Boundary(frontend, "Frontend") {
 }
 
 System_Boundary(backend, "Backend") {
-    Component(AuthController, "AuthController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с аутентификацией")
-    Component(UserController, "UserController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с пользователями")
-    Component(PlaceController, "PlaceController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достопримечательностями")
-    Component(RouteController, "RouteController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с маршрутами")
-    Component(FriendController, "FriendController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с друзьями")
-    Component(RatingController, "RatingController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с рейтингом")
-    Component(ChatController, "ChatController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с чатами")
-    Component(AchievementController, "AchievementController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достижениями")
 
-    Component(AuthService, "AuthService", "Service", "Содержит бизнес логику связанную с аутентификацией")
-    Component(UserService, "UserService", "Service", "Содержит бизнес логику связанную с пользователями")
-    Component(PlaceService, "PlaceService", "Service", "Содержит бизнес логику связанную с достопримечательностями")
-    Component(RouteService, "RouteService", "Service", "Содержит бизнес логику связанную с маршрутами")
-    Component(FriendService, "FriendService", "Service", "Содержит бизнес логику связанную с друзьями")
-    Component(RatingService, "RatingService", "Service", "Содержит бизнес логику связанную с рейтингом")
-    Component(ChatService, "ChatService", "Service", "Содержит бизнес логику связанную с чатами")
-    Component(AchievementService, "AchievementService", "Service", "Содержит бизнес логику связанную с достижениями")
+    System_Boundary(infrastructure, "Infrastructure Layer") {
 
-    Component(UserModel, "UserModel", "Eloquent Model", "Реализует CRUD с пользователями")
-    Component(PlaceModel, "PlaceModel", "Eloquent Model", "Реализует CRUD с достопримечательностями")
-    Component(RouteModel, "RouteModel", "Eloquent Model", "Реализует CRUD с маршрутами")
-    Component(FriendModel, "FriendModel", "Eloquent Model", "Реализует CRUD с друзьями")
-    Component(ChatModel, "ChatModel", "Eloquent Model", "Реализует CRUD с чатами")
-    Component(AchievementModel, "AchievementModel", "Eloquent Model", "Реализует CRUD с достижениями")
+        System_Boundary(controllers, "Controllers") {
+            Component(AuthController, "AuthController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с аутентификацией")
+            Component(UserController, "UserController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с пользователями")
+            Component(PlaceController, "PlaceController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достопримечательностями")
+            Component(RouteController, "RouteController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с маршрутами")
+            Component(FriendController, "FriendController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с друзьями")
+            Component(RatingController, "RatingController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с рейтингом")
+            Component(ChatController, "ChatController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с чатами")
+            Component(AchievementController, "AchievementController", "Laravel MVC Rest Contrller", "Обрабатывает запросы связанный с достижениями")
+        }
+
+        System_Boundary(repositories, "Repositories") {
+            Component(FriendshipRepository, "FriendshipRepository", "Repository", "Отвечает за работу с данными")
+            Component(PlaceRepository, "PlacesRepository", "Repository", "Отвечает за работу с данными")
+            Component(LocalityRepository, "LocalityRepository", "Repository", "Отвечает за работу с данными")
+            Component(PlaceReviewRepository, "PlaceReviewRepository", "Repository", "Отвечает за работу с данными")
+            Component(PlaceTypeRepository, "PlaceTypeRepository", "Repository", "Отвечает за работу с данными")
+            Component(RouteConstructorRepository, "RouteConstructorRepository", "Repository", "Отвечает за работу с данными")
+            Component(RouteReviewRepository, "RouteReviewRepository", "Repository", "Отвечает за работу с данными")
+            Component(RouteRepository, "RouteRepository", "Repository", "Отвечает за работу с данными")
+            Component(UserRepository, "UserRepository", "Repository", "Отвечает за работу с данными")
+            Component(ChatRepository, "ChatRepository", "Repository", "Отвечает за работу с данными")
+            Component(AchievementRepository, "AchievementRepository", "Repository", "Отвечает за работу с данными")
+        }
+
+        System_Boundary(managers, "Managers") {
+            Component(CacheManager, "CacheManager", "Manager", "Отвечает за работу с кешем")
+            Component(MailManager, "MailManager", "Manager", "Отвечает за работу с почтой")
+            Component(HashManager, "HashManager", "Manager", "Отвечает за работу с хешированными данными")
+            Component(TokenManager, "TokenManager", "Manager", "Отвечает за работу с токеном")
+            Component(StorageManager, "StorageManager", "Manager", "Отвечает за работу с хранилищем")
+            Component(NotifierManager, "NotifierManager", "Manager", "Отвечает за работу с уведомлениями")
+        }
+
+    }
+
+    System_Boundary(application, "Application Layer") {
+        Component(AuthService, "AuthService", "Service", "Содержит бизнес логику связанную с аутентификацией")
+        Component(UserService, "UserService", "Service", "Содержит бизнес логику связанную с пользователями")
+        Component(PlaceService, "PlaceService", "Service", "Содержит бизнес логику связанную с достопримечательностями")
+        Component(PlaceFilterService, "PlaceFilterService", "Service", "Содержит бизнес логику связанную с достопримечательностями")
+        Component(PlaceReviewService, "PlaceReviewService", "Service", "Содержит бизнес логику связанную с маршрутами")
+        Component(RouteConstructorService, "RouteConstructorService", "Service", "Содержит бизнес логику связанную с маршрутами")
+        Component(RouteFilterService, "RouteFilterService", "Service", "Содержит бизнес логику связанную с маршрутами")
+        Component(RouteReviewService, "RouteReviewService", "Service", "Содержит бизнес логику связанную с отзывами на маршруты")
+        Component(RouteService, "RouteService", "Service", "Содержит бизнес логику связанную с маршрутами")
+        Component(FriendshipService, "FriendshipService", "Service", "Содержит бизнес логику связанную с друзьями")
+        Component(RatingService, "RatingService", "Service", "Содержит бизнес логику связанную с рейтингом")
+        Component(ChatService, "ChatService", "Service", "Содержит бизнес логику связанную с чатами")
+        Component(AchievementService, "AchievementService", "Service", "Содержит бизнес логику связанную с достижениями")
+    }
+
+    System_Boundary(domain, "Domain Layer") {
+        Component(DistanceManager, "DistanceManager", "Manager", "Содержит логику обработки расстояний")
+    }
 }
 
 ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
-
 Rel_D(frontend, backend, "Uses", "html/json, https")
 
+
 Rel_D(AuthController, AuthService, "Uses", "AuthDTO")
-Rel_D(AuthService, UserModel, "Uses", "AuthDTO")
-
 Rel_D(UserController, UserService, "Uses", "UserDTO")
-Rel_D(UserService, UserModel, "Uses", "UserDTO")
-
+Rel_D(FriendController,FriendshipService, "Uses", "FriendshipDTO")
 Rel_D(PlaceController, PlaceService, "Uses", "PlaceDTO")
-Rel_D(PlaceService, PlaceModel, "Uses", "PlaceDTO")
-Rel_D(PlaceModel, db,"CRUD", "SQLRequest")
+Rel_D(PlaceController, PlaceReviewService, "Uses", "PlaceDTO")
+Rel_D(PlaceController, PlaceFilterService, "Uses", "PlaceDTO")
 
 Rel_D(RouteController, RouteService, "Uses", "RouteDTO")
-Rel_D(RouteService, RouteModel, "Uses", "RouteDTO")
-Rel_D(RouteModel, db,"CRUD", "SQLRequest")
-
-Rel_D(FriendController,FriendService, "Uses", "FriendDTO")
-Rel_D(FriendService, FriendModel, "Uses", "FriendDTO")
-Rel_D(FriendModel, db,"CRUD", "SQLRequest")
+Rel_D(RouteController, RouteReviewService, "Uses", "RouteReviewDTO")
+Rel_D(RouteController, RouteFilterService, "Uses", "RouteFilterDTO")
+Rel_D(RouteController, RouteConstructorService, "Uses", "RouteConstructorDTO")
 
 Rel_D(RatingController, RatingService, "Uses", "RatingDTO")
-Rel_D(RatingService, UserModel, "Uses", "RatingDTO")
-Rel_D(UserModel, db,"CRUD", "SQLRequest")
-
 Rel_D(ChatController, ChatService, "Uses", "ChatDTO")
-Rel_D(ChatService, ChatModel, "Uses", "ChatDTO")
-Rel_D(ChatModel, db,"CRUD", "SQLRequest")
-
 Rel_D(AchievementController, AchievementService, "Uses", "AchievementDTO")
-Rel_D(AchievementService, AchievementModel, "Uses", "AchievementDTO")
-Rel_D(AchievementModel, db,"CRUD", "SQLRequest")
+
+Rel_U(FriendshipRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(PlaceRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(PlaceReviewRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(LocalityRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(PlaceTypeRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(ChatRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(AchievementRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(UserRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(RouteRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(RouteReviewRepository, db, "Uses", "CRUD", "SQLRequest")
+Rel_U(RouteConstructorRepository, db, "Uses", "CRUD", "SQLRequest")
+
+Rel_U(AuthService, CacheManager, "Uses", "")
+Rel_U(AuthService, MailManager, "Uses", "")
+Rel_U(AuthService, TokenManager, "Uses", "")
+Rel_U(AuthService, HashManager, "Uses", "")
+
+Rel_U(UserService, StorageManager, "Uses", "")
+Rel_U(UserService, HashManager, "Uses", "")
+
+Rel_U(FriendshipService, NotifierManager, "Uses", "FriendRequestDTO")
+
+Rel_U(AchievementService, NotifierManager, "Uses", "AchievementDTO")
+
+Rel_U(AuthService, UserRepository, "Uses", "UserDTO")
+Rel_U(UserService, UserRepository, "Uses", "UserDTO")
+Rel_U(PlaceService, PlaceRepository, "Uses", "PlaceDTO")
+
+Rel_U(PlaceFilterService, LocalityRepository, "Uses", "LocalityDTO")
+Rel_U(PlaceFilterService, PlaceTypeRepository, "Uses", "PlaceTypeDTO")
+
+Rel_U(PlaceReviewService, PlaceReviewRepository, "Uses", "PlaceReviewDTO")
+
+Rel_U(RouteConstructorService, RouteConstructorRepository, "Uses", "RouteConstuctorDTO")
+
+Rel_U(RouteReviewService, RouteReviewRepository, "Uses", "RouteReviewDTO")
+
+Rel_U(RouteService, RouteRepository, "Uses", "RouteConstuctorDTO")
+
+Rel_U(RatingService, UserRepository, "Uses", "")
+
+
+Rel_D(PlaceService, DistanceManager, "Uses", "")
+
 @enduml
