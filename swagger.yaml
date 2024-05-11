@@ -709,7 +709,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUser'
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        oneOf:
+                          - $ref: '#/components/schemas/User'
+                      score:
+                        type: number
+                        example: 50
         '401':
           description: Невалидный токен
         '404':
@@ -1178,6 +1188,68 @@ paths:
         '404':
           description: В системе нет такого ресурса
 
+  /achievements:
+    get:
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 10
+      tags:
+        - achievements
+      summary: Получение списка всех достижений
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAchievements'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: В системе нет такого ресурса
+
+  /achievements/types:
+    get:
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 10
+      tags:
+        - achievements
+      summary: Получение списка всех типов достижений
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешное получение данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAchievementsTypes'
+        '401':
+          description: Невалидный токен
+        '404':
+          description: В системе нет такого ресурса
+
   /users/{userId}/achievements:
     get:
       parameters:
@@ -1186,6 +1258,17 @@ paths:
           required: true
           schema:
             type: number
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 10
       tags:
         - achievements
       summary: Получение списка достижений пользователя
@@ -2122,9 +2205,9 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/UserAvatar'
-        score:
+        email:
           type: integer
-          example: 50
+          example: test@test.test
 
     UserAvatar:
       type: string
@@ -2284,6 +2367,19 @@ components:
           type: string
           example: '/images/achievement.jpeg'
 
+    TypeAchievement:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'gold'
+        value:
+          type: integer
+          example: 5
+
     GetUserAchievements:
       type: object
       properties:
@@ -2297,6 +2393,24 @@ components:
                 type: number
                 example: 0
 
+    GetAchievements:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Achievement'
+
+    GetAchievementsTypes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/TypeAchievement'
+
     GetRating:
       type: object
       properties:
@@ -2308,9 +2422,9 @@ components:
               user:
                 oneOf:
                   - $ref: '#/components/schemas/ShortUser'
-              place:
+              score:
                 type: number
-                example: 1
+                example: 50
 
     Message:
       type: object
