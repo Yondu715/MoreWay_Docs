@@ -355,7 +355,7 @@ paths:
             type: number
         - name: limit
           in: query
-          required: true
+          required: false
           schema:
             type: number
             example: 10
@@ -1294,6 +1294,17 @@ paths:
           required: true
           schema:
             type: number
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 10
       tags:
         - chats
       summary: Получение списка чатов пользователя
@@ -1324,6 +1335,12 @@ paths:
           required: false
           schema:
             type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 10
       tags:
         - friends
       summary: Получение списка друзей пользователя
@@ -1483,6 +1500,18 @@ paths:
 
   /rating:
     get:
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 10
       tags:
         - rating
       summary: Получение рейтинга пользователей
@@ -1639,6 +1668,12 @@ paths:
           required: false
           schema:
             type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 10
       tags:
         - chats
       summary: Получение списка сообщений чата
@@ -1730,7 +1765,7 @@ paths:
         '404':
           description: В системе нет такого ресурса
 
-    post:
+    put:
       parameters:
         - name: chatId
           in: path
@@ -2442,21 +2477,21 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortUser'
-    
+
     PostMessage:
       type: object
       properties:
         message:
           type: string
           example: 'Это сообщение'
-    
+
     GetMessage:
       type: object
       properties:
         data:
           oneOf:
             - $ref: '#/components/schemas/Message'
-    
+
     GetMessages:
       type: object
       properties:
@@ -2465,7 +2500,7 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/Message'
-    
+
     ShortChat:
       type: object
       properties:
@@ -2479,7 +2514,7 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/Message'
-    
+
     FullChat:
       type: object
       properties:
@@ -2498,23 +2533,18 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/ShortUser'
-        messages:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Message'
         activity:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortRoute'
-    
+
     GetChat:
       type: object
       properties:
         data:
           oneOf:
             - $ref: '#/components/schemas/FullChat'
-    
+
     GetChats:
       type: object
       properties:
@@ -2523,10 +2553,13 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/ShortChat'
-    
+
     PostChat:
       type: object
       properties:
+        name:
+          type: string
+          example: "Чат для тех, кто любит проходить супер крутой маршрут по лесу"
         creatorId:
           type: number
           example: 1
