@@ -2481,6 +2481,9 @@ components:
     PostMessage:
       type: object
       properties:
+        userId:
+          type: integer
+          example: 1
         message:
           type: string
           example: 'Это сообщение'
@@ -2560,7 +2563,7 @@ components:
         name:
           type: string
           example: "Чат для тех, кто любит проходить супер крутой маршрут по лесу"
-        creatorId:
+        userId:
           type: number
           example: 1
         members:
