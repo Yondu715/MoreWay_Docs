@@ -881,7 +881,7 @@ paths:
             schema:
               type: object
               properties:
-                routePoints:
+                items:
                   type: array
                   items:
                     type: object
@@ -1611,7 +1611,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetChat'
+                $ref: '#/components/schemas/ChatMembers'
         '401':
           description: Невалидный токен
         '403':
@@ -2540,6 +2540,15 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/ShortRoute'
+
+    ChatMembers:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ShortUser'
 
     GetChat:
       type: object
