@@ -908,7 +908,7 @@ paths:
                       id:
                         type: integer
                         example: 2
-                      routePoints:
+                      items:
                         type: array
                         items:
                           type: object
