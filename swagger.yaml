@@ -1740,11 +1740,6 @@ paths:
           required: true
           schema:
             type: number
-        - name: lastId
-          in: query
-          required: true
-          schema:
-            type: number
       tags:
         - chats
       summary: Получение выбранного в чате маршрута
@@ -1769,11 +1764,6 @@ paths:
       parameters:
         - name: chatId
           in: path
-          required: true
-          schema:
-            type: number
-        - name: lastId
-          in: query
           required: true
           schema:
             type: number
@@ -2586,15 +2576,18 @@ components:
         routeId:
           type: number
           example: 5
-    
+
     PostChatUsers:
       type: object
       properties:
-        usersId:
+        members:
           type: array
           items:
-            type: number
-            example: 1
+            type: object
+            properties:
+              id:
+                type: number
+                example: 2
     
     PostChatActivity:
       type: object
