@@ -873,7 +873,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Изменение конструктора маршрута пользователя
+      summary: Создание или изменение конструктора маршрута пользователя
       requestBody:
         required: true
         content:
