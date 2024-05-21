@@ -873,7 +873,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Создание или изменение конструктора маршрута пользователя
+      summary: Изменение конструктора маршрута пользователя
       requestBody:
         required: true
         content:
@@ -930,7 +930,7 @@ paths:
             type: number
       tags:
         - routes
-      summary: Получение конструктора маршрута пользователя
+      summary: Получение или инициализация конструктора маршрута пользователя
       security:
         - bearerAuth: []
       responses:
