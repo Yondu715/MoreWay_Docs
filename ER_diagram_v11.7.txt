@@ -1,7 +1,7 @@
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
-Table friends {
+Table friendships {
   id integer [pk]
   user_id integer
   friend_id integer
@@ -41,13 +41,6 @@ Table places {
   lon float
   locality_id integer
   type_id integer
-}
-
-Table place_comments {
-  id integer [pk]
-  text varchar
-  author_id integer
-  place_id integer
 }
 
 Table localities {
@@ -122,23 +115,18 @@ Table user_route_progresses {
   is_completed boolean
 }
 
-Table place_ratings {
+Table place_reviews {
   id integer [pk]
-  user_id integer
+  text varchar
+  author_id integer
   place_id integer
   rating integer
 }
 
-Table route_comments {
-  id integer [primary key]
+Table route_reviews {
+  id integer [pk]
   text varchar
   author_id integer
-  route_id integer
-}
-
-Table route_ratings {
-  id integer [pk]
-  user_id integer
   route_id integer
   rating integer
 }
@@ -167,6 +155,18 @@ Table chat_active_routes {
   route_id integer
 }
 
+Table route_constructor {
+  id integer [pk]
+  creator_id integer
+}
+
+Table route_constructor_points {
+  id integer [pk]
+  index integer
+  place_id integer
+  constructor_id integer
+}
+
 Ref: chats.id - chat_active_routes.chat_id
 
 Ref: routes.id < chat_active_routes.route_id
@@ -177,17 +177,9 @@ Ref: routes.id < user_active_routes.route_id
 
 Ref: users.id - user_active_routes.user_id
 
-Ref: routes.id < route_ratings.route_id
+Ref: routes.id < route_reviews.route_id
 
-Ref: users.id < route_ratings.user_id
-
-Ref: routes.id < route_comments.route_id
-
-Ref: users.id < route_comments.author_id
-
-Ref: users.id < place_ratings.user_id
-
-Ref: places.id < place_ratings.place_id
+Ref: users.id < route_reviews.author_id
 
 Ref: route_points.id < user_route_progresses.route_point_id
 
@@ -209,9 +201,9 @@ Ref: chat_messages.sender_id > users.id
 
 Ref: chats.creator_id > users.id
 
-Ref: place_comments.place_id > places.id
+Ref: place_reviews.place_id > places.id
 
-Ref: place_comments.author_id > users.id
+Ref: place_reviews.author_id > users.id
 
 Ref: routes.creator_id > users.id
 
@@ -229,10 +221,16 @@ Ref: localities.id < places.locality_id
 
 Ref: roles.id < users.role_id
 
-Ref: users.id < friends.user_id
+Ref: users.id < friendships.user_id
 
-Ref: users.id < friends.friend_id
+Ref: users.id < friendships.friend_id
 
-Ref: friends.relationship_id > friend_relationship_types.id
+Ref: friendships.relationship_id > friend_relationship_types.id
 
 Ref: users.id - user_scores.user_id
+
+Ref: route_constructor.creator_id - users.id
+
+Ref: route_constructor_points.place_id > places.id
+
+Ref: route_constructor_points.constructor_id > route_constructor.id

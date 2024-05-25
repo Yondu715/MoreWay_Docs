@@ -871,6 +871,18 @@ paths:
           required: true
           schema:
             type: number
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 55.123123
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 55.123123
       tags:
         - routes
       summary: Создание или изменение конструктора маршрута пользователя
@@ -928,9 +940,21 @@ paths:
           required: true
           schema:
             type: number
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 55.123123
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            example: 55.123123
       tags:
         - routes
-      summary: Получение конструктора маршрута пользователя
+      summary: Получение или инициализация конструктора маршрута пользователя
       security:
         - bearerAuth: []
       responses:
