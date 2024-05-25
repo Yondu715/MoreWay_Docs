@@ -2568,11 +2568,8 @@ components:
         members:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: number
-                example: 2
+            type: number
+            example: 1
         routeId:
           type: number
           example: 5
@@ -2583,11 +2580,8 @@ components:
         members:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: number
-                example: 2
+            type: number
+            example: 1
     
     PostChatActivity:
       type: object
