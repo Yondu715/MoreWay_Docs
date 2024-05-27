@@ -787,7 +787,7 @@ paths:
           description: В системе нет такого ресурса
 
   /users/{userId}/avatar:
-    put:
+    post:
       parameters:
         - name: userId
           in: path
