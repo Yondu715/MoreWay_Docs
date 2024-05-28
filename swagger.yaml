@@ -1369,7 +1369,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetFriendsRequests"
+                $ref: "#/components/schemas/GetFriendRequests"
         "401":
           description: Невалидный токен
         "403":
@@ -2118,8 +2118,8 @@ components:
           type: object
           properties:
             cursor:
-              type: number
-              example: 1
+              type: string
+              example: Hkgdfhuhfkjfh
 
     GetRoute:
       type: object
@@ -2252,14 +2252,6 @@ components:
       type: string
       example: "images/avatar1.jpeg"
 
-    GetUserAvatar:
-      type: object
-      properties:
-        data:
-          type: object
-          oneOf:
-            - $ref: "#/components/schemas/UserAvatar"
-
     PostUserPassword:
       type: object
       properties:
@@ -2313,6 +2305,12 @@ components:
           type: object
           oneOf:
             - $ref: "#/components/schemas/User"
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: string
+              example: Hhrrweuh@42h1j2h
 
     PatchUser:
       type: object
@@ -2329,8 +2327,14 @@ components:
           items:
             oneOf:
               - $ref: "#/components/schemas/User"
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: string
+              example: Hkgdfhuhfkjfh
 
-    GetFriendsRequests:
+    GetFriendRequests:
       type: object
       properties:
         data:
@@ -2343,8 +2347,14 @@ components:
               user:
                 oneOf:
                   - $ref: "#/components/schemas/ShortUser"
+        meta:
+          type: object
+          properties:
+            cursor:
+              type: string
+              example: Hkgdfhuhfkjfh
 
-    GetFriendsRequest:
+    GetFriendRequest:
       type: object
       properties:
         data:
