@@ -1397,7 +1397,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetFriendsRequest"
+                $ref: "#/components/schemas/GetFriendRequest"
         "401":
           description: Невалидный токен
         "403":
