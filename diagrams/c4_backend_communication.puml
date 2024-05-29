@@ -21,7 +21,7 @@ System_Boundary(frontend, "Frontend") {
 System_Boundary(backend, "Backend") {
     Container(websocket, "Websocket Server", "Ratchet", "Обрабатывает логику приложения в реальном времени", $sprite="web")
 
-    Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
+    Container(api, "REST API Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
 
     Container(redis, "Redis Server", "Redis", "Хранилище в оперативной памяти", $sprite="redis")
 
