@@ -526,7 +526,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetRoute"
+                $ref: "#/components/schemas/GetRouteById"
         "401":
           description: Невалидный токен
         "404":
@@ -1005,7 +1005,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetRoute"
+                $ref: "#/components/schemas/FullActiveRoute"
         "401":
           description: Невалидный токен
         "404":
@@ -2137,6 +2137,93 @@ components:
           items:
             oneOf:
               - $ref: "#/components/schemas/VeryShortPlace"
+        creator:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/ShortUser"
+
+    GetRouteById:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/FullRouteById"
+
+    FullRouteById:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 5
+        name:
+          type: string
+          example: "Супер маршрут по лесу"
+        points:
+          type: integer
+          example: 5
+        isActive:
+          type: boolean
+          example: false
+        isFaavorite:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 3.4
+        routePoints:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              index:
+                type: number
+                example: 1
+              place:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/ShortPlace"
+        creator:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/ShortUser"
+
+    FullActiveRoute:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 5
+        name:
+          type: string
+          example: "Супер маршрут по лесу"
+        points:
+          type: integer
+          example: 5
+        rating:
+          type: number
+          example: 3.4
+        routePoints:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              index:
+                type: number
+                example: 1
+              isCompleted:
+                type: boolean
+                example: true
+              place:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/ShortPlace"
         creator:
           type: object
           oneOf:
