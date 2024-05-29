@@ -545,7 +545,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetRouteFilters'
+                $ref: "#/components/schemas/GetRouteFilters"
         "401":
           description: Невалидный токен
         "404":
@@ -1563,20 +1563,20 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '201':
+        "201":
           description: Успешная инициализация или участие в голосовании
-        '401':
+        "401":
           description: Невалидный токен
-        '403':
+        "403":
           description: Недостаточно прав
-        '404':
+        "404":
           description: В системе нет такого ресурса
-        '422':
+        "422":
           description: Невалидные данные
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error422'
+                $ref: "#/components/schemas/Error422"
 
   /chats/{chatId}/votes/activity-point:
     put:
@@ -1605,20 +1605,20 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '201':
+        "201":
           description: Успешная инициализация или участие в голосовании
-        '401':
+        "401":
           description: Невалидный токен
-        '403':
+        "403":
           description: Недостаточно прав
-        '404':
+        "404":
           description: В системе нет такого ресурса
-        '422':
+        "422":
           description: Невалидные данные
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error422'
+                $ref: "#/components/schemas/Error422"
 
   /chats/{chatId}/members:
     post:
@@ -2624,21 +2624,35 @@ components:
             oneOf:
               - $ref: "#/components/schemas/TypeAchievement"
 
+    Rating:
+      type: object
+      properties:
+        user:
+          oneOf:
+            - $ref: "#/components/schemas/ShortUser"
+        score:
+          type: number
+          example: 50
+        position:
+          type: number
+          example: 1
+
     GetRating:
       type: object
       properties:
         data:
-          type: array
-          items:
-            type: object
-            properties:
-              user:
+          type: object
+          properties:
+            leaders:
+              type: array
+              items:
                 oneOf:
-                  - $ref: "#/components/schemas/ShortUser"
-              score:
-                type: number
-                example: 50
-
+                  - $ref: "#/components/schemas/Rating"
+            userRating:
+              type: object
+              oneOf:
+                - $ref: "#/components/schemas/Rating"
+              
     Message:
       type: object
       properties:
