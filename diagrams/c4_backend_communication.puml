@@ -7,32 +7,39 @@
 !include $ICONURL/devicons2/chrome.puml
 !include $ICONURL/font-awesome-5/laravel.puml
 !include $ICONURL/devicons/mysql.puml
+!include $ICONURL/devicons2/redis.puml
+!include $ICONURL/devicons2/rabbitmq_original.puml
 !include $ICONURL/material/web.puml
-!include $ICONURL/material/map.puml
 
 'LAYOUT_WITH_LEGEND()'
-
-Person(user, "Пользователь-посетитель", "Путешествует по достопримечательностям Кузбасса")
-Person(moderator, "Пользователь-модератор", "Просматривает и поддерживает в актульном состоянии список достопримечательностей")
 
 System_Boundary(frontend, "Frontend") {
     Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
     Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
 }
-System_Ext(openStreetMaps, "OpenStreetMaps API", "Интерфейс для работы с картами при помощи OSM SDK", $sprite="map")
 
 System_Boundary(backend, "Backend") {
-    Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
+    System_Boundary(supervisor, "Supervisor") {
+        Container(websocket, "Websocket Server", "Ratchet", "Обрабатывает логику приложения в реальном времени", $sprite="web")
+    }
+
+    Container(api, "REST API Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
+
+    Container(redis, "Redis Server", "Redis", "Хранилище в оперативной памяти", $sprite="redis")
+
+    Container(rabbitMQ, "RabbitMQ Server", "RabbitMQ", "Брокер сообщений", $sprite="rabbitmq_original")
 
     ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
 }
 
 
-Rel(user, mobileApp, "Uses", "mobile app")
-Rel(moderator, webApp, "Uses", "web app")
+
 Rel(mobileApp, api, "Uses", "https/json, wss")
 Rel(webApp, api, "Uses", "https/json, html")
-Rel_R(api, db, "Reads/Writes", "CRUD")
-Rel_L(mobileApp, openStreetMaps, "Uses", "https/json")
+Rel_D(api, db, "Reads/Writes", "CRUD")
+Rel_D(api, rabbitMQ, "Uses", "DTO")
+Rel_D(websocket, rabbitMQ, "Uses", "DTO")
+Rel_D(api, redis, "Reads/Writes", "DTO")
+Rel_D(websocket, redis, "Reads/Writes", "DTO")
 
 @enduml
