@@ -19,7 +19,9 @@ System_Boundary(frontend, "Frontend") {
 }
 
 System_Boundary(backend, "Backend") {
-    Container(websocket, "Websocket Server", "Ratchet", "Обрабатывает логику приложения в реальном времени", $sprite="web")
+    System_Boundary(supervisor, "Supervisor") {
+        Container(websocket, "Websocket Server", "Ratchet", "Обрабатывает логику приложения в реальном времени", $sprite="web")
+    }
 
     Container(api, "REST API Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
 
