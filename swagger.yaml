@@ -2462,8 +2462,14 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: "#/components/schemas/User"
+          properties:
+            user:
+              type: object
+              oneOf:
+                - $ref: "#/components/schemas/User"
+            isFriend:
+              type: boolean
+              example: false
         meta:
           type: object
           properties:
