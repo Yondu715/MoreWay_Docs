@@ -1,13 +1,14 @@
 @startuml Container
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
-!define MATERIAL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/material
-!include DEVICONS2/flutter.puml
-!include DEVICONS2/chrome.puml
-!include DEVICONS2/laravel.puml
-!include DEVICONS2/mysql.puml
-!include MATERIAL/map.puml
+!$ICONURL = "https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v3.0.0/icons"
+
+!include $ICONURL/devicons2/flutter.puml
+!include $ICONURL/devicons2/chrome.puml
+!include $ICONURL/font-awesome-5/laravel.puml
+!include $ICONURL/devicons/mysql.puml
+!include $ICONURL/material/web.puml
+!include $ICONURL/material/map.puml
 
 'LAYOUT_WITH_LEGEND()'
 
@@ -22,9 +23,10 @@ System_Ext(openStreetMaps, "OpenStreetMaps API", "Интерфейс для ра
 
 System_Boundary(backend, "Backend") {
     Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
+
+    ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
 }
 
-ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
 
 Rel(user, mobileApp, "Uses", "mobile app")
 Rel(moderator, webApp, "Uses", "web app")
