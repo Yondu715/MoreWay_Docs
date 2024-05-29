@@ -2437,17 +2437,19 @@ components:
         email:
           type: string
           example: "aboba@aboba.ru"
-        password:
-          type: string
-          example: "abober"
 
     GetAuthUser:
       type: object
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: "#/components/schemas/FullUser"
+          properties:
+            user:
+              oneOf:
+                - $ref: "#/components/schemas/FullUser"
+            score:
+              type: number
+              example: 10
 
     GetUser:
       type: object
