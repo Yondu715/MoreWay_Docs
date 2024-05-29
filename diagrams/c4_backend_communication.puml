@@ -13,7 +13,6 @@
 
 'LAYOUT_WITH_LEGEND()'
 
-
 System_Boundary(frontend, "Frontend") {
     Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
     Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
@@ -26,7 +25,7 @@ System_Boundary(backend, "Backend") {
 
     Container(redis, "Redis Server", "Redis", "Хранилище в оперативной памяти", $sprite="redis")
 
-    Container(rabbitMq, "RabbitMq Server", "RabbitMq", "Брокер сообщений", $sprite="rabbitmq_original")
+    Container(rabbitMQ, "RabbitMQ Server", "RabbitMQ", "Брокер сообщений", $sprite="rabbitmq_original")
 
     ContainerDb(db, "Database", "MySQL", "Хранит информацию о пользователях, достопримечательностях, маршрутах и т.д.", $sprite="mysql")
 }
@@ -36,8 +35,8 @@ System_Boundary(backend, "Backend") {
 Rel(mobileApp, api, "Uses", "https/json, wss")
 Rel(webApp, api, "Uses", "https/json, html")
 Rel_D(api, db, "Reads/Writes", "CRUD")
-Rel_D(api, rabbitMq, "Uses", "DTO")
-Rel_D(websocket, rabbitMq, "Uses", "DTO")
+Rel_D(api, rabbitMQ, "Uses", "DTO")
+Rel_D(websocket, rabbitMQ, "Uses", "DTO")
 Rel_D(api, redis, "Reads/Writes", "DTO")
 Rel_D(websocket, redis, "Reads/Writes", "DTO")
 
