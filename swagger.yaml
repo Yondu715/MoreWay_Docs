@@ -2469,9 +2469,9 @@ components:
               type: object
               oneOf:
                 - $ref: "#/components/schemas/User"
-            isFriend:
-              type: boolean
-              example: false
+            relationship:
+              type: string
+              example: friend
         meta:
           type: object
           properties:
@@ -2530,7 +2530,10 @@ components:
             id:
               type: number
               example: 1
-            user:
+            sender:
+              oneOf:
+                - $ref: "#/components/schemas/ShortUser"
+            recipient:
               oneOf:
                 - $ref: "#/components/schemas/ShortUser"
 
