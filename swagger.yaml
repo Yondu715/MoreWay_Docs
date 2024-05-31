@@ -2530,10 +2530,10 @@ components:
             id:
               type: number
               example: 1
-            sender:
+            user:
               oneOf:
                 - $ref: "#/components/schemas/ShortUser"
-            recipient:
+            friend:
               oneOf:
                 - $ref: "#/components/schemas/ShortUser"
 
