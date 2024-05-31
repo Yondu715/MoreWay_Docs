@@ -1578,48 +1578,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error422"
 
-  /chats/{chatId}/votes/activity-point:
-    put:
-      parameters:
-        - name: chatId
-          in: path
-          required: true
-          schema:
-            type: number
-        - name: lat
-          in: query
-          required: true
-          schema:
-            type: number
-            example: 55.123123
-        - name: lon
-          in: query
-          required: true
-          schema:
-            type: number
-            example: 55.123123
-      tags:
-        - chats
-      summary: Инициализировать или участвовать в голосовании за прохождение точки активности
-      description: Это действие доступно только участнику чата
-      security:
-        - bearerAuth: []
-      responses:
-        "201":
-          description: Успешная инициализация или участие в голосовании
-        "401":
-          description: Невалидный токен
-        "403":
-          description: Недостаточно прав
-        "404":
-          description: В системе нет такого ресурса
-        "422":
-          description: Невалидные данные
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error422"
-
   /chats/{chatId}/members:
     post:
       parameters:
@@ -2321,6 +2279,12 @@ components:
         routePointId:
           type: number
           example: 1
+        lat:
+          type: number
+          example: 12345.65
+        lon:
+          type: number
+          example: 98983.34
 
     GetRouteFilters:
       type: object
@@ -2657,7 +2621,7 @@ components:
               type: object
               oneOf:
                 - $ref: "#/components/schemas/Rating"
-              
+
     Message:
       type: object
       properties:
