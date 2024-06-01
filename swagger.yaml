@@ -1099,7 +1099,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetRoute"
+                $ref: "#/components/schemas/GetShortRoute"
         "401":
           description: Невалидный токен
         "403":
@@ -2076,9 +2076,6 @@ components:
         name:
           type: string
           example: "Супер маршрут по лесу"
-        places:
-          type: integer
-          example: 5
         rating:
           type: number
           example: 3.4
@@ -2115,7 +2112,7 @@ components:
         isActive:
           type: boolean
           example: false
-        isFaavorite:
+        isFavorite:
           type: boolean
           example: true
         rating:
@@ -2237,6 +2234,14 @@ components:
           type: object
           oneOf:
             - $ref: "#/components/schemas/FullRoute"
+    
+    GetShortRoute:
+      type: object
+      properties:
+        data:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/ShortRoute"
 
     PostRoute:
       type: object
