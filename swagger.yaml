@@ -694,16 +694,8 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      user:
-                        oneOf:
-                          - $ref: "#/components/schemas/User"
-                      score:
-                        type: number
-                        example: 50
+                oneOf:
+                  - $ref: "#/components/schemas/GetUser"
         "401":
           description: Невалидный токен
         "404":
@@ -2420,8 +2412,14 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: "#/components/schemas/User"
+          properties:
+            user:
+              type: object
+              oneOf:
+                - $ref: "#/components/schemas/ShortUser"
+            score:
+              type: number
+              example: 50
 
     GetUsers:
       type: object
@@ -2432,7 +2430,7 @@ components:
             user:
               type: object
               oneOf:
-                - $ref: "#/components/schemas/User"
+                - $ref: "#/components/schemas/ShortUser"
             relationship:
               type: string
               example: friend
@@ -2457,7 +2455,7 @@ components:
           type: array
           items:
             oneOf:
-              - $ref: "#/components/schemas/User"
+              - $ref: "#/components/schemas/ShortUser"
         meta:
           type: object
           properties:
@@ -2476,6 +2474,9 @@ components:
                 type: number
                 example: 1
               user:
+                oneOf:
+                  - $ref: "#/components/schemas/ShortUser"
+              friend:
                 oneOf:
                   - $ref: "#/components/schemas/ShortUser"
         meta:
