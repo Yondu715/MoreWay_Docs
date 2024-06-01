@@ -2548,9 +2548,6 @@ components:
             name:
               type: string
               example: "gold"
-            value:
-              type: integer
-              example: 5
         image:
           type: string
           example: "/images/achievement.jpeg"
@@ -2574,9 +2571,12 @@ components:
         data:
           type: array
           items:
-            oneOf:
-              - $ref: "#/components/schemas/Achievement"
+            type: object
             properties:
+              achievement:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/Achievement"
               currentProgress:
                 type: number
                 example: 0
