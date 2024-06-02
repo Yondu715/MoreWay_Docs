@@ -1922,6 +1922,9 @@ components:
     FullPlace:
       type: object
       properties:
+        distance:
+          type: number
+          example: 4.5
         id:
           type: integer
           example: 12
@@ -1990,8 +1993,8 @@ components:
               - $ref: "#/components/schemas/ShortPlace"
             properties:
               distance:
-                type: number
-                example: 4.5
+                type: integer
+                example: 1483
         meta:
           type: object
           properties:
@@ -2004,12 +2007,16 @@ components:
       properties:
         data:
           type: object
-          oneOf:
-            - $ref: "#/components/schemas/FullPlace"
           properties:
-            distance:
-              type: number
-              example: 4.5
+            place:
+              type: object
+              oneOf:
+                - $ref: "#/components/schemas/FullPlace"
+              properties:
+                
+            isInConstructor:
+              type: boolean
+              example: true
 
     Review:
       type: object
