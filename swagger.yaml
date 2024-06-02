@@ -2012,8 +2012,6 @@ components:
               type: object
               oneOf:
                 - $ref: "#/components/schemas/FullPlace"
-              properties:
-                
             isInConstructor:
               type: boolean
               example: true
