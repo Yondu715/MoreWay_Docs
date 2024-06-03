@@ -19,7 +19,12 @@ System_Boundary(frontend, "Frontend") {
     Container(mobileApp, "Mobile Application", "flutter", "Интерфейс, с которым взаимодействует пользователь", $sprite="flutter")
     Container(webApp, "Admin MPA", "html/css", "Интерфейс, с которым взаимодействует модератор", $sprite="chrome")
 }
-System_Ext(openStreetMaps, "OpenStreetMaps API", "Интерфейс для работы с картами при помощи OSM SDK", $sprite="map")
+
+System_Ext(openStreetMaps, "OpenStreetMaps", "Тайлинговый сервис для карт", $sprite="map")
+
+System_Ext(openStreetMapNominatim, "OpenStreetMap Nominatim", "Геоинкодер", $sprite="map")
+
+System_Ext(openSourceRoutingMachine, "OSRM", "Система маршрутизации", $sprite="map")
 
 System_Boundary(backend, "Backend") {
     Container(api, "Backend Application", "Laravel", "Обрабатывает основную логику приложения", $sprite="laravel")
@@ -28,11 +33,21 @@ System_Boundary(backend, "Backend") {
 }
 
 
-Rel(user, mobileApp, "Uses", "mobile app")
-Rel(moderator, webApp, "Uses", "web app")
-Rel(mobileApp, api, "Uses", "https/json, wss")
-Rel(webApp, api, "Uses", "https/json, html")
+Lay_L(openStreetMaps, frontend)
+Lay_L(openStreetMapNominatim, frontend)
+Lay_L(openSourceRoutingMachine, frontend)
+
+Lay_D(openStreetMaps, openStreetMapNominatim)
+Lay_D(openStreetMapNominatim, openSourceRoutingMachine)
+
+
+Rel_D(user, mobileApp, "Uses", "mobile app")
+Rel_D(moderator, webApp, "Uses", "web app")
+Rel_D(mobileApp, api, "Uses", "https/json, wss")
+Rel_D(webApp, api, "Uses", "https/json, html")
 Rel_R(api, db, "Reads/Writes", "CRUD")
 Rel_L(mobileApp, openStreetMaps, "Uses", "https/json")
+Rel_L(mobileApp, openStreetMapNominatim, "Uses", "https/json")
+Rel_L(mobileApp, openSourceRoutingMachine, "Uses", "https/json")
 
 @enduml
