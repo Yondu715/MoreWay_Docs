@@ -2146,36 +2146,42 @@ components:
     FullActiveRoute:
       type: object
       properties:
-        id:
-          type: number
-          example: 5
-        name:
-          type: string
-          example: "Супер маршрут по лесу"
-        points:
-          type: integer
-          example: 5
-        rating:
-          type: number
-          example: 3.4
-        routePoints:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: number
-                example: 1
-              index:
-                type: number
-                example: 1
-              isCompleted:
-                type: boolean
-                example: true
-              place:
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 5
+            name:
+              type: string
+              example: "Супер маршрут по лесу"
+            points:
+              type: integer
+              example: 5
+            isGroup:
+              type: boolean
+              example: true
+            rating:
+              type: number
+              example: 3.4
+            routePoints:
+              type: array
+              items:
                 type: object
-                oneOf:
-                  - $ref: "#/components/schemas/ShortPlace"
+                properties:
+                  id:
+                    type: number
+                    example: 1
+                  index:
+                    type: number
+                    example: 1
+                  isCompleted:
+                    type: boolean
+                    example: true
+                  place:
+                    type: object
+                    oneOf:
+                      - $ref: "#/components/schemas/ShortPlace"
         creator:
           type: object
           oneOf:
